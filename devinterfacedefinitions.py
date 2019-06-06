@@ -1,5 +1,5 @@
 from enum import Enum
-
+#some changes
 '''
 DEV_OPERATION = {}
 DEV_OPERATION["NRF52_ENABLE_EXPANSION_PORT_POWER"] = "exppwron"
