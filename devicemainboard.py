@@ -33,9 +33,9 @@ class BCmb(object):
     attempts = 1
 
     @staticmethod
-    def writeProgram(program_in_json):
+    def writeProgram(addr, program_in_json):
         result = ACTION.FAIL
-        result = devInterface.sendCommandAndGetResponse(0x00, 0x57, program_in_json, BCmb.timeout)
+        result = devInterface.sendCommandAndGetResponse(addr, 0x57, program_in_json, BCmb.timeout)
         print(result)
         if result != None:
             if result[1] == 'PASS':
@@ -45,9 +45,9 @@ class BCmb(object):
         return result
 
     @staticmethod
-    def run():
+    def run(addr):
         result = ACTION.FAIL
-        result = devInterface.sendCommandAndGetResponse(0x00, 0x01, "", BCmb.timeout)
+        result = devInterface.sendCommandAndGetResponse(addr, 0x01, "", BCmb.timeout)
         print(result)
         if result != None:
             if result[1] == 'PASS':
@@ -57,9 +57,9 @@ class BCmb(object):
         return result
 
     @staticmethod
-    def pause():
+    def pause(addr):
         result = ACTION.FAIL
-        result = devInterface.sendCommandAndGetResponse(0x00, 0x02, "", BCmb.timeout)
+        result = devInterface.sendCommandAndGetResponse(addr, 0x02, "", BCmb.timeout)
         print(result)
         if result != None:
             if result[1] == 'PASS':
@@ -69,9 +69,9 @@ class BCmb(object):
         return result
 
     @staticmethod
-    def readProgram():
+    def readProgram(addr):
         result = ACTION.FAIL
-        result = devInterface.sendCommandAndGetResponse(0x00, 0x52, "", BCmb.timeout)
+        result = devInterface.sendCommandAndGetResponse(addr, 0x52, "", BCmb.timeout)
         print(result)
         if result != None:
             if result[1] == 'PASS':
@@ -81,9 +81,9 @@ class BCmb(object):
         return result
 
     @staticmethod
-    def readVoltage():
+    def readVoltage(addr):
         result = ACTION.FAIL
-        result = devInterface.sendCommandAndGetResponse(0x00, 0x56, "", BCmb.timeout)
+        result = devInterface.sendCommandAndGetResponse(addr, 0x56, "", BCmb.timeout)
         print(result)
         if result != None:
             if result[1] == 'PASS':
@@ -93,9 +93,9 @@ class BCmb(object):
         return result
 
     @staticmethod
-    def readTemperature():
+    def readTemperature(addr):
         result = ACTION.FAIL
-        result = devInterface.sendCommandAndGetResponse(0x00, 0x54, "", BCmb.timeout)
+        result = devInterface.sendCommandAndGetResponse(addr, 0x54, "", BCmb.timeout)
         print(result)
         if result != None:
             if result[1] == 'PASS':
@@ -105,9 +105,9 @@ class BCmb(object):
         return result
 
     @staticmethod
-    def readCurrent():
+    def readCurrent(addr):
         result = ACTION.FAIL
-        result = devInterface.sendCommandAndGetResponse(0x00, 0x49, "", BCmb.timeout)
+        result = devInterface.sendCommandAndGetResponse(addr, 0x49, "", BCmb.timeout)
         print(result)
         if result != None:
             if result[1] == 'PASS':
@@ -117,9 +117,9 @@ class BCmb(object):
         return result
 
     @staticmethod
-    def readStep():
+    def readStep(addr):
         result = ACTION.FAIL
-        result = devInterface.sendCommandAndGetResponse(0x00, 0x50, "", BCmb.timeout)
+        result = devInterface.sendCommandAndGetResponse(addr, 0x50, "", BCmb.timeout)
         print(result)
         if result != None:
             if result[1] == 'PASS':
@@ -129,9 +129,9 @@ class BCmb(object):
         return result
 
     @staticmethod
-    def readType():
+    def readType(addr):
         result = ACTION.FAIL
-        result = devInterface.sendCommandAndGetResponse(0x00, 0x50, "", BCmb.timeout)
+        result = devInterface.sendCommandAndGetResponse(addr, 0x50, "", BCmb.timeout)
         print(result)
         if result != None:
             if result[1] == 'PASS':
@@ -141,9 +141,9 @@ class BCmb(object):
         return result
 
     @staticmethod
-    def currentTime():
+    def currentTime(addr):
         result = ACTION.FAIL
-        result = devInterface.sendCommandAndGetResponse(0x00, 0x74, "", BCmb.timeout)
+        result = devInterface.sendCommandAndGetResponse(addr, 0x74, "", BCmb.timeout)
         print(result)
         if result != None:
             if result[1] == 'PASS':
