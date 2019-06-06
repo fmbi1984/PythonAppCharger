@@ -12,7 +12,6 @@ from enum import Enum
 
 import shared
 import appsettings
-import report
 
 from devinterface import devInterface
 
@@ -181,9 +180,9 @@ class BCmb(object):
 if __name__ == "__main__":
     print("tests")
     #BCmb.writeProgram("[{\"Type\":\"Begin\"},{\"Type\":\"Pause\",\"Time\":\"10000\"},{\"Type\":\"Charge\",\"Time\":\"120000\",\"Current\":\"8.0\"},{\"Type\":\"Charge\",\"Time\":\"50000\",\"Current\":\"12.0\"},{\"Type\":\"Carga\",\"Time\":\"60000\",\"Current\":\"15.0\"},{\"Type\":\"Charge\",\"Time\":\"40000\",\"Current\":\"20.0\"},{\"Type\":\"Pause\",\"Time\":\"20000\"},{\"Type\":\"Charge\",\"Time\":\"30000\",\"Current\":\"10.5\"},{\"Type\":\"Charge\",\"Time\":\"40000\",\"Current\":\"14.5\"},{\"Type\":\"End\"}]")
-    #BCmb.readProgram()
+    BCmb.readProgram()
     #BCmb.run()
-    BCmb.readStep()
+    #BCmb.readStep()
     #BCmb.currentTime()
     #BCmb.readProgram()
     '''

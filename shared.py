@@ -1,5 +1,4 @@
 import threading
-from report import IndividualReport, MainReport
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QFileDialog, QDialog, QMessageBox, QScrollBar, QApplication, QWidget, QMainWindow
@@ -15,8 +14,7 @@ HIGH = 1
 
 lock = threading.Lock() # lock will be used as a lock for the UART
 ljLock = threading.Lock() # lock will be used as a lock for the labjack
-ireport = IndividualReport(None)
-mreport = MainReport()
+
 
 def map(x, in_min, in_max, out_min, out_max):
     return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min
