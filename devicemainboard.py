@@ -156,7 +156,7 @@ class BCmb(object):
     @staticmethod
     def setAddress(address):
         result = ACTION.FAIL
-        result = devInterface.sendCommandAndGetResponse(0xFF, 0x66, address, BCmb.timeout)
+        result = devInterface.sendCommandAndGetResponse(None, 0xFF, address, BCmb.timeout)
         print(result)
         if result != None:
             if result[1] == 'PASS':
@@ -168,7 +168,7 @@ class BCmb(object):
     @staticmethod
     def getAddress():
         result = ACTION.FAIL
-        result = devInterface.sendCommandAndGetResponse(0xFF, 0x67, "", BCmb.timeout)
+        result = devInterface.sendCommandAndGetResponse(None, 0xFF, "", BCmb.timeout)
         print(result)
         if result != None:
             if result[1] == 'PASS':

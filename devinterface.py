@@ -22,7 +22,8 @@ class devInterface(object):
     def packMessage(address, msg_op_type, msg_data):
         packet_data = []
         packet_data.append(0x02)
-        packet_data.append(address) # address
+        if address != None:
+            packet_data.append(address) # address
         packet_data.append(msg_op_type)
         packet_data.extend(msg_data)
         xmodem_crc_func = crcmod.mkCrcFun(0x11021, rev=False, initCrc=0x0000, xorOut=0x0000)
