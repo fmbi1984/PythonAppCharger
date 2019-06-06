@@ -19,10 +19,10 @@ logger = logging.getLogger(__name__)
 class devInterface(object):
 
     @staticmethod
-    def packMessage(msg_op_type, msg_data):
+    def packMessage(address, msg_op_type, msg_data):
         packet_data = []
         packet_data.append(0x02)
-        packet_data.append(0x00) # address
+        packet_data.append(address) # address
         packet_data.append(msg_op_type)
         packet_data.extend(msg_data)
         xmodem_crc_func = crcmod.mkCrcFun(0x11021, rev=False, initCrc=0x0000, xorOut=0x0000)
@@ -30,7 +30,7 @@ class devInterface(object):
         crc16_high, crc16_low = crc16 >> 8, crc16 & 0x00FF
         packet_data.extend([0x03, crc16_low, crc16_high, 0x04])
         return packet_data
-    
+
     @staticmethod
     def unpackMessage(msg_data):
         packet_data = msg_data[2:len(msg_data)-4]
@@ -40,16 +40,16 @@ class devInterface(object):
         msg_crc_high, msg_crc_low = msg_data[len(msg_data)-2:len(msg_data)-1][0], msg_data[len(msg_data)-3:len(msg_data)-2][0]
         is_valid = False
         #is_valid = (msg_crc_high == crc16_high) and (msg_crc_low == crc16_low) and (msg_data[0] == 0x02) and (msg_data[len(msg_data)-1] == 0x04)
-        msg_type = msg_data[1] 
+        msg_type = msg_data[1]
         msg_data = packet_data
         return [is_valid, msg_type, msg_data]
 
     @staticmethod
-    def sendCommandAndGetResponse(op, cmd, timeout):
+    def sendCommandAndGetResponse(address, op, cmd, timeout):
         result = None
         try:
             cmd_data = bytes(cmd,'ISO-8859-1')
-            p_data = devInterface.packMessage(op, cmd_data)
+            p_data = devInterface.packMessage(address, op, cmd_data)
             #sp = SerialPortUtil.getPortBySerialNumber(appsettings.FTDI_serialNumber)
             sp = SerialPortUtil.getFirstPortByVID_PID(0x067b,0x2303)
             if sp == None:
@@ -61,7 +61,7 @@ class devInterface(object):
             if sct.stopped() == False:
                 e="serial thread not stopped"
                 print("\033[1;31;40m"+str(e)+"\033[0;37;40m")
-            
+
             data = serial_cmd_result[0]
             result = None
             if data != None:
@@ -79,7 +79,7 @@ class devInterface(object):
         mystr = ''.join(str( bytes(_msg), 'ISO-8859-1'))
         print(mystr)
 
-        
+
         if 'PASS:' in ''.join(str( bytes(_msg), 'ISO-8859-1') ):
             #print('YEAH, PASS!')
             mystr = ''.join(str( bytes(_msg)))
@@ -100,7 +100,7 @@ class devInterface(object):
             response =  mystr.split(":", 1)[1]
             response = response[1:len(response)-1]
             result = ['ACTION', response]
-        
+
         if 'VALUE:' in ''.join(str( bytes(_msg), 'ISO-8859-1') ):
             #print('OHH, VALUE!')
             mystr = ''.join(str( bytes(_msg)))
