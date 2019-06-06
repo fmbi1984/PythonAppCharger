@@ -155,7 +155,7 @@ class BCmb(object):
     @staticmethod
     def setAddress(address):
         result = ACTION.FAIL
-        result = devInterface.sendCommandAndGetResponse(None, 0xFF, address, BCmb.timeout)
+        result = devInterface.sendCommandAndGetResponse(None, 0xFF, str(chr(address)), BCmb.timeout)
         print(result)
         if result != None:
             if result[1] == 'PASS':
@@ -180,7 +180,8 @@ class BCmb(object):
 if __name__ == "__main__":
     print("tests")
     #BCmb.writeProgram("[{\"Type\":\"Begin\"},{\"Type\":\"Pause\",\"Time\":\"10000\"},{\"Type\":\"Charge\",\"Time\":\"120000\",\"Current\":\"8.0\"},{\"Type\":\"Charge\",\"Time\":\"50000\",\"Current\":\"12.0\"},{\"Type\":\"Carga\",\"Time\":\"60000\",\"Current\":\"15.0\"},{\"Type\":\"Charge\",\"Time\":\"40000\",\"Current\":\"20.0\"},{\"Type\":\"Pause\",\"Time\":\"20000\"},{\"Type\":\"Charge\",\"Time\":\"30000\",\"Current\":\"10.5\"},{\"Type\":\"Charge\",\"Time\":\"40000\",\"Current\":\"14.5\"},{\"Type\":\"End\"}]")
-    BCmb.readProgram()
+    #BCmb.readProgram()
+    BCmb.setAddress(1)
     #BCmb.run()
     #BCmb.readStep()
     #BCmb.currentTime()
