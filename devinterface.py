@@ -112,5 +112,50 @@ class devInterface(object):
 
         return result
 
+
+    @staticmethod
+    def packMessageFake(address, msg_op_type, msg_data):
+        packet_data = []
+        packet_data.append(0x02)
+        if address != None:
+            packet_data.append(address) # address
+        packet_data.append(msg_op_type)
+        packet_data.extend(msg_data)
+        xmodem_crc_func = crcmod.mkCrcFun(0x11021, rev=False, initCrc=0x0000, xorOut=0x0000)
+        crc16 = xmodem_crc_func(bytes(msg_data[0:len(msg_data)]))
+        crc16_high, crc16_low = crc16 >> 8, crc16 & 0x00FF
+        packet_data.extend([0x03, crc16_low, crc16_high])
+        return packet_data
+
+    @staticmethod
+    def sendCommandAndGetResponseFake(address, op, cmd, timeout):
+        result = None
+        try:
+            cmd_data = bytes(cmd,'ISO-8859-1')
+            p_data = devInterface.packMessageFake(address, op, cmd_data)
+            #sp = SerialPortUtil.getPortBySerialNumber(appsettings.FTDI_serialNumber)
+            sp = SerialPortUtil.getFirstPortByVID_PID(0x067b,0x2303)
+            #sp = SerialPortUtil.getFirstPortByVID_PID(0x10c4,0xea60)
+            if sp == None:
+                raise Exception("devInterface", "No serial device " + appsettings.FTDI_serialNumber + " found!")
+            sct = SerialCommThread(None, sp, appsettings.FTDI_baudRate, p_data, b'\x04',timeout,5)
+            sct.start()
+            sct.join()
+            print("serial thread stopped")
+            if sct.stopped() == False:
+                e="serial thread not stopped"
+                print("\033[1;31;40m"+str(e)+"\033[0;37;40m")
+
+            data = serial_cmd_result[0]
+            result = None
+            if data != None:
+                result = devInterface.decodeMessage(data)
+            else:
+                result = None
+        except Exception as e:
+            print("\033[1;31;40m"+str(e)+"\033[0;37;40m")
+        return result
+
+
 if __name__ == '__main__':
     print("tests")

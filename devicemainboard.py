@@ -176,18 +176,30 @@ class BCmb(object):
                 result = ACTION.FAIL
         return result
 
+    @staticmethod
+    def writeProgramFake(addr, program_in_json):
+        result = ACTION.FAIL
+        result = devInterface.sendCommandAndGetResponseFake(addr, 0x57, program_in_json, BCmb.timeout)
+        print(result)
+        if result != None:
+            if result[1] == 'PASS':
+                result = ACTION.PASS
+            else:
+                result = ACTION.FAIL
+        return result
+
 
 if __name__ == "__main__":
     print("tests")
-    #BCmb.writeProgram("[{\"Type\":\"Begin\"},{\"Type\":\"Pause\",\"Time\":\"10000\"},{\"Type\":\"Charge\",\"Time\":\"120000\",\"Current\":\"8.0\"},{\"Type\":\"Charge\",\"Time\":\"50000\",\"Current\":\"12.0\"},{\"Type\":\"Carga\",\"Time\":\"60000\",\"Current\":\"15.0\"},{\"Type\":\"Charge\",\"Time\":\"40000\",\"Current\":\"20.0\"},{\"Type\":\"Pause\",\"Time\":\"20000\"},{\"Type\":\"Charge\",\"Time\":\"30000\",\"Current\":\"10.5\"},{\"Type\":\"Charge\",\"Time\":\"40000\",\"Current\":\"14.5\"},{\"Type\":\"End\"}]")
-    #BCmb.readProgram()
+    #BCmb.writeProgram(0, "[{\"Type\":\"Begin\"},{\"Type\":\"Pause\",\"Time\":\"10000\"},{\"Type\":\"Charge\",\"Time\":\"120000\",\"Current\":\"8.0\"},{\"Type\":\"Charge\",\"Time\":\"50000\",\"Current\":\"12.0\"},{\"Type\":\"Carga\",\"Time\":\"60000\",\"Current\":\"15.0\"},{\"Type\":\"Charge\",\"Time\":\"40000\",\"Current\":\"20.0\"},{\"Type\":\"Pause\",\"Time\":\"20000\"},{\"Type\":\"Charge\",\"Time\":\"30000\",\"Current\":\"10.5\"},{\"Type\":\"Charge\",\"Time\":\"40000\",\"Current\":\"14.5\"},{\"Type\":\"End\"}]")
+    #BCmb.readProgram(0)
     BCmb.setAddress(1)
-    #BCmb.run()
-    #BCmb.readStep()
-    #BCmb.currentTime()
-    #BCmb.readProgram()
+    #BCmb.run(0)
+    #BCmb.readStep(0)
+    #BCmb.currentTime(0)
+    #BCmb.readProgram(0)
     '''
     while True:
-        BCmb.readCurrent()
+        BCmb.readCurrent(0)
         sleep(.1)
     '''
