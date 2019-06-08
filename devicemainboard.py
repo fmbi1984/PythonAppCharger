@@ -47,7 +47,7 @@ class BCmb(object):
     @staticmethod
     def run(addr):
         result = ACTION.FAIL
-        result = devInterface.sendCommandAndGetResponse(addr, 0x01, "", BCmb.timeout)
+        result = devInterface.sendCommandAndGetResponse(addr, 0x33, "", BCmb.timeout)
         print(result)
         if result != None:
             if result[1] == 'PASS':
@@ -59,7 +59,19 @@ class BCmb(object):
     @staticmethod
     def pause(addr):
         result = ACTION.FAIL
-        result = devInterface.sendCommandAndGetResponse(addr, 0x02, "", BCmb.timeout)
+        result = devInterface.sendCommandAndGetResponse(addr, 0x34, "", BCmb.timeout)
+        print(result)
+        if result != None:
+            if result[1] == 'PASS':
+                result = ACTION.PASS
+            else:
+                result = ACTION.FAIL
+        return result
+    
+    @staticmethod
+    def stop(addr):
+        result = ACTION.FAIL
+        result = devInterface.sendCommandAndGetResponse(addr, 0x35, "", BCmb.timeout)
         print(result)
         if result != None:
             if result[1] == 'PASS':
