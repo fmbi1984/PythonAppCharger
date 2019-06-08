@@ -64,7 +64,7 @@ def getFirstPortByVID_PID(vid, pid):
         print(port.serial_number)
         s = port.device
         result.append(s)
-        #break
+        break
     
     try:
         ser = serial.Serial(name, 9600, timeout=1)

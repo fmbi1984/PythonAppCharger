@@ -52,7 +52,8 @@ class devInterface(object):
             cmd_data = bytes(cmd,'ISO-8859-1')
             p_data = devInterface.packMessage(address, op, cmd_data)
             #sp = SerialPortUtil.getPortBySerialNumber(appsettings.FTDI_serialNumber)
-            sp = SerialPortUtil.getFirstPortByVID_PID(0x067b,0x2303)
+            #sp = SerialPortUtil.getFirstPortByVID_PID(0x067b,0x2303)
+            sp = SerialPortUtil.getFirstPortByVID_PID(0x1a86,0x7523)
             #sp = SerialPortUtil.getFirstPortByVID_PID(0x10c4,0xea60)
             if sp == None:
                 raise Exception("devInterface", "No serial device " + appsettings.FTDI_serialNumber + " found!")
@@ -134,7 +135,8 @@ class devInterface(object):
             cmd_data = bytes(cmd,'ISO-8859-1')
             p_data = devInterface.packMessageFake(address, op, cmd_data)
             #sp = SerialPortUtil.getPortBySerialNumber(appsettings.FTDI_serialNumber)
-            sp = SerialPortUtil.getFirstPortByVID_PID(0x067b,0x2303)
+            #sp = SerialPortUtil.getFirstPortByVID_PID(0x067b,0x2303)
+            sp = SerialPortUtil.getFirstPortByVID_PID(0x1a86,0x7523)
             #sp = SerialPortUtil.getFirstPortByVID_PID(0x10c4,0xea60)
             if sp == None:
                 raise Exception("devInterface", "No serial device " + appsettings.FTDI_serialNumber + " found!")
