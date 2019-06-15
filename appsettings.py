@@ -60,7 +60,7 @@ APP_TESTS = [
     ['PIC32ManufacturingFirmwareProgramming', 'PIC32 Manufacturing Firmware Programming',                           CATASTROPHIC, INCLUDE, TEST_UNCHECKED, TEST_NONE],
     ['ActivatingManufacturingTestingOnThePIC32AndNRF52', 'Activating Manufacturing Testing on the PIC32 and NRF52', CATASTROPHIC, INCLUDE, TEST_UNCHECKED, TEST_NONE],
     ['voltageTestsPart2', 'Voltage Tests Part 2',                                                                   CATASTROPHIC, INCLUDE, TEST_UNCHECKED, TEST_NONE],
-    
+
     ['hardwareIDTest', 'Hardware ID Test',                                                                          NON_CATASTROPHIC, INCLUDE, TEST_UNCHECKED, TEST_NONE],
     ['pic32SetSerialNumber', 'PIC32 Set Serial Number',                                                             NON_CATASTROPHIC, INCLUDE, TEST_UNCHECKED, TEST_NONE],
     ['PIC32ReadFirmwareVersions', 'PIC32 Read Firmware Versions',                                                   NON_CATASTROPHIC, INCLUDE, TEST_UNCHECKED, TEST_NONE],
@@ -89,11 +89,11 @@ APP_TESTS = [
     ['WirelessModuleInterfacePIC32UARTTest', 'Wireless Module Interface PIC32 UART Test',                           NON_CATASTROPHIC, INCLUDE, TEST_UNCHECKED, TEST_NONE],
     ['WirelessModuleInterfacenRF52I2CTest', 'Wireless Module Interface nRF52 I2C Test',                             NON_CATASTROPHIC, INCLUDE, TEST_UNCHECKED, TEST_NONE],
     ['WirelessModuleInterfacenRF52GPIOTest', 'Wireless Module Interface nRF52 GPIO Test',                           NON_CATASTROPHIC, INCLUDE, TEST_UNCHECKED, TEST_NONE],
-    
+
     ['FrontPanelPowerStatusLEDTest', 'Front Panel Power Status LED Test',                                          NON_CATASTROPHIC, INCLUDE, TEST_UNCHECKED, TEST_NONE],
-    
+
     #['FrontPanelWirelessModuleStatusLEDTest', 'Front Panel Wireless Module Status LED Test',                       NON_CATASTROPHIC, INCLUDE, TEST_UNCHECKED, TEST_NONE],
-    
+
     ['FrontPanelTriColorStatusBLUELEDTest', 'Front Panel Tri-Color Status BLUE LED Test',                          NON_CATASTROPHIC, INCLUDE, TEST_UNCHECKED, TEST_NONE],
     ['FrontPanelTriColorStatusREDLEDTest', 'Front Panel Tri-Color Status RED LED Test',                            NON_CATASTROPHIC, INCLUDE, TEST_UNCHECKED, TEST_NONE],
     ['FrontPanelTriColorStatusGREENLEDTest', 'Front Panel Tri-Color Status GREEN LED Test',                        NON_CATASTROPHIC, INCLUDE, TEST_UNCHECKED, TEST_NONE],
@@ -103,7 +103,7 @@ APP_TESTS = [
     ['BatteryTest', 'Battery Test',   NON_CATASTROPHIC, INCLUDE, TEST_UNCHECKED, TEST_NONE],
     ['BatteryBoostCircuitandMainVoltageLossIndicatorCircuitTest', 'Battery Boost Circuit and Main Voltage Loss Indicator Circuit Test',   NON_CATASTROPHIC, INCLUDE, TEST_UNCHECKED, TEST_NONE],
     ['PIC32ApplicationFirmwareProgramming', 'Set As Application Firmware',                                          NON_CATASTROPHIC, INCLUDE, TEST_UNCHECKED, TEST_NONE],
-    
+
  ]
 
 '''
@@ -168,7 +168,7 @@ def countEnabledTests():
 # Future Technology Devices International Limited FT232R USB UART
 FTDI_idVendor=0x0403
 FTDI_idProduct=0x6001
-FTDI_baudRate=230400
+FTDI_baudRate=115200
 if inAustin == True:
     FTDI_serialNumber='AH05R7EI' # Austin
 else:
@@ -206,13 +206,13 @@ NRF52_SEGGER_SPEED = 4000
 LED_THRESHOLD = 80
 
 # MDB Voltage and Current Test
-MDB_VOLTAGE_HIGH_VALUE = 30 
+MDB_VOLTAGE_HIGH_VALUE = 30
 MDB_VOLTAGE_LOW_VALUE = 20
 MDB_CURRENT_HIGH_VALUE = 200 # mA
 MDB_CURRENT_LOW_VALUE = 25 # mA
 
 # Voltage Tests [A2, A1, A0]
-# VCC_MDB_FLTR, Filtered MDB input voltage (VCC_MDB_FLTR), TP38, [0, 0, 0] 
+# VCC_MDB_FLTR, Filtered MDB input voltage (VCC_MDB_FLTR), TP38, [0, 0, 0]
 VCC_MDB_FLTR_ACCEPTABLE_HIGH_VALUE = 25.2
 VCC_MDB_FLTR_ACCEPTABLE_LOW_VALUE = 19.0
 
