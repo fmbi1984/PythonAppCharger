@@ -6,6 +6,8 @@ import threading
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 
+#Frank
+
 # Create the class 'Communicate'. The instance
 # from this class shall be used later on for the
 # signal/slot mechanism.
