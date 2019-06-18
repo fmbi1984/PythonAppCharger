@@ -55,9 +55,12 @@ class devInterface(object):
             #sp = SerialPortUtil.getFirstPortByVID_PID(0x067b,0x2303)
             
             if appsettings.useInMac == True:
+                print("Test Mac")
                 sp = SerialPortUtil.getFirstPortByVID_PID(0x1a86,0x7523)
             else:
+                print("Test Raspbian")
                 sp = SerialPortUtil.getPortByName("/dev/ttyS0")
+                print(sp)
             #
             #sp = SerialPortUtil.getFirstPortByVID_PID(0x10c4,0xea60)
             if sp == None:

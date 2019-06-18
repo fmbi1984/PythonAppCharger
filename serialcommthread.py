@@ -16,9 +16,14 @@ from shared import lock
 import serial
 import appsettings
 
+if appsettings.useInMac == True:
+    import RPi.GPIO as GPIO
+
 serial_cmd_result = [None]
 
 logger = logging.getLogger(__name__)
+
+EN_485 =  4
 
 class SerialCommThread(Thread):
 
@@ -50,6 +55,8 @@ class SerialCommThread(Thread):
         Thread.__init__(self)
         self._name = "SerialCommThread"
         self._portname = None
+
+
 
         if callbackFunc != None:
             self._callback = Communicate()
@@ -97,6 +104,9 @@ class SerialCommThread(Thread):
         self._wasStopped.clear()
 
     def run(self):
+        GPIO.setmode(GPIO.BCM)
+        GPIO.setup(EN_485,GPIO.OUT)
+        GPIO.output(EN_485,GPIO.LOW)
         lock.acquire()
         #print("started")
         while not self._msgwasreceived and not self._stopevent.is_set():
@@ -119,7 +129,10 @@ class SerialCommThread(Thread):
                         print("doing attempt no."+str(n+1)+" msg:"+ ''.join(str( bytes(self._messagetosend), 'ISO-8859-1')))
                         self._serialport.flushOutput()
                         self._serialport.flushInput()
+                        GPIO.output(EN_485,GPIO.HIGH)
                         self._serialport.write(self._messagetosend)
+                        sleep(5)
+                        GPIO.output(EN_485,GPIO.LOW)
 
                     
                     # wait until we get the full message or timeout

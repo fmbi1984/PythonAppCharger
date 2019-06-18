@@ -46,6 +46,7 @@ def getPortNamesBy_VID_PID(vid, pid):
 def getPortByName(name):
     try:
         ser = serial.Serial(name, 9600, timeout=1)
+        print(ser)
         if not ser.isOpen():
             return None
         else:

@@ -5,7 +5,7 @@ from enum import Enum
 import shared
 
 useDesktopToSaveReports = True
-useInMac = True
+useInMac = False
 
 measureWMVoltage = False
 jlinkSNforPIC32 = 820100854
