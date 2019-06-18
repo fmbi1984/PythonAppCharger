@@ -53,8 +53,12 @@ class devInterface(object):
             p_data = devInterface.packMessage(address, op, cmd_data)
             #sp = SerialPortUtil.getPortBySerialNumber(appsettings.FTDI_serialNumber)
             #sp = SerialPortUtil.getFirstPortByVID_PID(0x067b,0x2303)
-            sp = SerialPortUtil.getPortByName("/dev/ttyS0")
-            #sp = SerialPortUtil.getFirstPortByVID_PID(0x1a86,0x7523)
+            
+            if appsettings.useInMac == True:
+                sp = SerialPortUtil.getFirstPortByVID_PID(0x1a86,0x7523)
+            else:
+                sp = SerialPortUtil.getPortByName("/dev/ttyS0")
+            #
             #sp = SerialPortUtil.getFirstPortByVID_PID(0x10c4,0xea60)
             if sp == None:
                 raise Exception("devInterface", "No serial device " + appsettings.FTDI_serialNumber + " found!")
