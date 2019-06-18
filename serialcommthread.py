@@ -16,8 +16,7 @@ from shared import lock
 import serial
 import appsettings
 
-if appsettings.useInMac == True:
-    import RPi.GPIO as GPIO
+import RPi.GPIO as GPIO
 
 serial_cmd_result = [None]
 
@@ -131,7 +130,6 @@ class SerialCommThread(Thread):
                         self._serialport.flushInput()
                         GPIO.output(EN_485,GPIO.HIGH)
                         self._serialport.write(self._messagetosend)
-                        sleep(5)
                         GPIO.output(EN_485,GPIO.LOW)
 
                     
@@ -243,6 +241,7 @@ class SerialCommThread(Thread):
         
 
     def read_from_port(self, ser):
+        GPIO.output(EN_485,GPIO.LOW)
         if not ser.is_open:
             # port is not open, we open the port
             ser.open()
