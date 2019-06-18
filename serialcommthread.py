@@ -104,6 +104,7 @@ class SerialCommThread(Thread):
 
     def run(self):
         GPIO.setmode(GPIO.BCM)
+        GPIO.setwarnings(False)
         GPIO.setup(EN_485,GPIO.OUT)
         GPIO.output(EN_485,GPIO.LOW)
         lock.acquire()
@@ -130,6 +131,7 @@ class SerialCommThread(Thread):
                         self._serialport.flushInput()
                         GPIO.output(EN_485,GPIO.HIGH)
                         self._serialport.write(self._messagetosend)
+                        delay(2)
                         GPIO.output(EN_485,GPIO.LOW)
 
                     
