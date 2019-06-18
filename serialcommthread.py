@@ -131,7 +131,7 @@ class SerialCommThread(Thread):
                         self._serialport.flushInput()
                         GPIO.output(EN_485,GPIO.HIGH)
                         self._serialport.write(self._messagetosend)
-                        delay(2)
+                        sleep(2)
                         GPIO.output(EN_485,GPIO.LOW)
 
                     
