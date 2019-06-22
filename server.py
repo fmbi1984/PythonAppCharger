@@ -75,6 +75,7 @@ def client_thread(conn):
                     reading = sp.read(1)
                     if len(reading) > 0:
                         handle_data(reading)
+                        print("reading")
         
         reply = b'OK . . '
         #reply = serial_cmd_result[0]
