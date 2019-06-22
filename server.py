@@ -63,10 +63,15 @@ def client_thread(conn):
             print("Test Raspbian")
             sp = SerialPortUtil.getPortByName("/dev/ttyS0")
         sp.baudrate = 115200
+        sp.timeout = 10
+        sp.flushInput()
+        sp.flushOutput()
+
         if not sp.is_open:
             sp.open()
+
         sp.write(data)
-        sleep(.002)
+        #sleep(.002)
         while sp.inWaiting()>0:
             n = sp.inWaiting()
             for _ in range(0, n):
@@ -75,6 +80,7 @@ def client_thread(conn):
                 if len(reading) > 0:
                     handle_data(reading)
                     print("reading > 0")
+        sp.close()
         
         reply = b'OK . . '
         #reply = serial_cmd_result[0]
