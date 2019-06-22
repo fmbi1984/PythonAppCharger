@@ -76,8 +76,8 @@ def client_thread(conn):
                     if len(reading) > 0:
                         handle_data(reading)
         
-        #reply = b'OK . . '
-        reply = serial_cmd_result[0]
+        reply = b'OK . . '
+        #reply = serial_cmd_result[0]
         print('Received', repr(data))
         conn.sendall(reply)
     print("[-] Closed connection")
