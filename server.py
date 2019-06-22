@@ -27,7 +27,7 @@ print("Listening...")
 # The code below is what you're looking for ############
 
 def client_thread(conn):
-    conn.send('Welcome to the Server. Type messages and press enter to send.\n'.encode())
+    
 
     while True:
         data = conn.recv(1024)

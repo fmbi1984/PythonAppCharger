@@ -13,6 +13,7 @@ import appsettings
 
 from communicate import Communicate
 from serialcommthread import SerialCommThread, serial_cmd_result
+from clientcommthread import ClientCommThread, client_cmd_result
 
 logger = logging.getLogger(__name__)
 
@@ -51,17 +52,16 @@ class devInterface(object):
         try:
             cmd_data = bytes(cmd,'ISO-8859-1')
             p_data = devInterface.packMessage(address, op, cmd_data)
-            #sp = SerialPortUtil.getPortBySerialNumber(appsettings.FTDI_serialNumber)
-            #sp = SerialPortUtil.getFirstPortByVID_PID(0x067b,0x2303)
-            
-            if appsettings.useInMac == True:
+
+            if appsettings.useDongle == True:
                 print("Test Mac")
                 sp = SerialPortUtil.getFirstPortByVID_PID(0x1a86,0x7523)
             else:
                 print("Test Raspbian")
                 sp = SerialPortUtil.getPortByName("/dev/ttyS0")
                 print(sp)
-            #
+            #sp = SerialPortUtil.getPortBySerialNumber(appsettings.FTDI_serialNumber)
+            #sp = SerialPortUtil.getFirstPortByVID_PID(0x067b,0x2303)
             #sp = SerialPortUtil.getFirstPortByVID_PID(0x10c4,0xea60)
             if sp == None:
                 raise Exception("devInterface", "No serial device " + appsettings.FTDI_serialNumber + " found!")
@@ -74,6 +74,34 @@ class devInterface(object):
                 print("\033[1;31;40m"+str(e)+"\033[0;37;40m")
 
             data = serial_cmd_result[0]
+            result = None
+            if data != None:
+                result = devInterface.decodeMessage(data)
+            else:
+                result = None
+        except Exception as e:
+            print("\033[1;31;40m"+str(e)+"\033[0;37;40m")
+        return result
+
+    @staticmethod
+    def sendClientCommandAndGetResponse(hostname, address, op, cmd, timeout):
+        result = None
+
+        try:
+            cmd_data = bytes(cmd,'ISO-8859-1')
+            p_data = devInterface.packMessage(address, op, cmd_data)
+
+            if hostname == None:
+                raise Exception("devInterface", "No hostname device found!")
+            sct = ClientCommThread(None, 'raspberrypi.local', p_data, b'\x04',timeout,5)
+            sct.start()
+            sct.join()
+            print("client thread stopped")
+            if sct.stopped() == False:
+                e="client thread not stopped"
+                print("\033[1;31;40m"+str(e)+"\033[0;37;40m")
+
+            data = client_cmd_result[0]
             result = None
             if data != None:
                 result = devInterface.decodeMessage(data)

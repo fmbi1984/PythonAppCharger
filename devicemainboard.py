@@ -200,16 +200,29 @@ class BCmb(object):
                 result = ACTION.FAIL
         return result
 
+    @staticmethod
+    def readCurrentClient(hostname, addr):
+        result = ACTION.FAIL
+        result = devInterface.sendClientCommandAndGetResponse(hostname,addr, 0x49, "", BCmb.timeout)
+        print(result)
+        if result != None:
+            if result[1] == 'PASS':
+                result = ACTION.PASS
+            else:
+                result = ACTION.FAIL
+        return result
+
 
 if __name__ == "__main__":
     print("tests")
     #BCmb.writeProgram(0, "[{\"Type\":\"Begin\"},{\"Type\":\"Pause\",\"Time\":\"10000\"},{\"Type\":\"Charge\",\"Time\":\"120000\",\"Current\":\"8.0\"},{\"Type\":\"Charge\",\"Time\":\"50000\",\"Current\":\"12.0\"},{\"Type\":\"Carga\",\"Time\":\"60000\",\"Current\":\"15.0\"},{\"Type\":\"Charge\",\"Time\":\"40000\",\"Current\":\"20.0\"},{\"Type\":\"Pause\",\"Time\":\"20000\"},{\"Type\":\"Charge\",\"Time\":\"30000\",\"Current\":\"10.5\"},{\"Type\":\"Charge\",\"Time\":\"40000\",\"Current\":\"14.5\"},{\"Type\":\"End\"}]")
     #BCmb.readProgram(0)
-    BCmb.setAddress(1)
+    #BCmb.setAddress(1)
     #BCmb.run(0)
     #BCmb.readStep(0)
     #BCmb.currentTime(0)
     #BCmb.readProgram(0)
+    BCmb.readCurrentClient('raspberrypi.local', 5)
     '''
     while True:
         BCmb.readCurrent(0)
