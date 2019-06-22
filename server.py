@@ -11,6 +11,16 @@ from time import sleep, time
 import serial
 import appsettings
 
+serial_cmd_result = [None]
+_dataByteArray = []
+_dataBytesLiteral = b''
+_packet_being_received = False
+_begin_char = b'\x02'
+_end_char = b'\x04'
+
+_flagcommand = False
+_msgwasreceived = False
+
 HOST = 'raspberrypi.local' # all availabe interfaces
 PORT = 65433 # arbitrary non privileged port
 
@@ -42,8 +52,8 @@ def client_thread(conn):
         data = conn.recv(1024)
         if not data:
             break
-        reply = b'OK . . '
-        print('Received', repr(data))
+        
+        
         
         sp = None
         if appsettings.useDongle == True:
@@ -57,10 +67,57 @@ def client_thread(conn):
             sp.open()
         sp.write(data)
         sleep(.002)
+
+        if sp.is_open:
+            while sp.inWaiting()>0:
+                n = sp.inWaiting()
+                for _ in range(0, n):
+                    reading = sp.read(1)
+                    if len(reading) > 0:
+                        handle_data(reading)
         
+        #reply = b'OK . . '
+        reply = serial_cmd_result[0]
+        print('Received', repr(data))
         conn.sendall(reply)
     print("[-] Closed connection")
     conn.close()
+
+def addcbuff(c):
+    if c == _end_char:
+        _dataByteArray.append(ord(c))
+        _dataBytesLiteral = ''.join(str( bytes(_dataByteArray), 'ISO-8859-1') )
+        _flag_command = True
+        process_data()
+        #print(c)
+        _packet_being_received = False
+        #print("END")
+    elif (c == _begin_char) and (len(_dataByteArray)<2):
+        #print("BEGIN")
+        _packet_being_received = True
+        _flagcommand = False
+        inicbuff()
+        _dataByteArray.append(ord(c))
+        _dataBytesLiteral = ''.join(str( bytes(_dataByteArray), 'ISO-8859-1') )
+        #print(c)
+    else:
+        if _packet_being_received == True:
+            _dataByteArray.append(ord(c))
+            _dataBytesLiteral = ''.join(str( bytes(_dataByteArray), 'ISO-8859-1') )
+            #print(c)
+
+def inicbuff():
+    #self._serialport.flushInput()
+    _dataByteArray.clear()
+    _dataBytesLiteral = b''
+
+def handle_data(c):
+    addcbuff(c)
+
+def process_data():
+    #print("process")
+    _msgwasreceived = True
+    serial_cmd_result[0] = _dataByteArray.copy()
 
 while True:
     # blocking call, waits to accept a connection
