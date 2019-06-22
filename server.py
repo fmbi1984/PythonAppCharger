@@ -2,6 +2,15 @@ import socket
 import sys
 from _thread import start_new_thread
 
+import USBUtils
+import SerialPortUtil
+import StringUtils
+
+from time import sleep, time
+
+import serial
+import appsettings
+
 HOST = 'raspberrypi.local' # all availabe interfaces
 PORT = 65433 # arbitrary non privileged port
 
@@ -33,9 +42,23 @@ def client_thread(conn):
         data = conn.recv(1024)
         if not data:
             break
-        #reply = b"OK . . " + data
+        reply = b'OK . . '
         print('Received', repr(data))
-        conn.sendall(data)
+        
+        sp = None
+        if appsettings.useDongle == True:
+            print("Test Mac")
+            sp = SerialPortUtil.getFirstPortByVID_PID(0x1a86,0x7523)
+        else:
+            print("Test Raspbian")
+            sp = SerialPortUtil.getPortByName("/dev/ttyS0")
+        sp.baudrate = 115200
+        if not sp.is_open:
+            sp.open()
+        sp.write(data)
+        sleep(.002)
+        
+        conn.sendall(reply)
     print("[-] Closed connection")
     conn.close()
 
