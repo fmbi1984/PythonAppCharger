@@ -67,15 +67,14 @@ def client_thread(conn):
             sp.open()
         sp.write(data)
         sleep(.002)
-
-        if sp.is_open:
-            while sp.inWaiting()>0:
-                n = sp.inWaiting()
-                for _ in range(0, n):
-                    reading = sp.read(1)
-                    if len(reading) > 0:
-                        handle_data(reading)
-                        print("reading")
+        while sp.inWaiting()>0:
+            n = sp.inWaiting()
+            for _ in range(0, n):
+                reading = sp.read(1)
+                print("reading")
+                if len(reading) > 0:
+                    handle_data(reading)
+                    print("reading > 0")
         
         reply = b'OK . . '
         #reply = serial_cmd_result[0]
