@@ -247,7 +247,8 @@ class SerialCommThread(Thread):
         
 
     def read_from_port(self, ser):
-        GPIO.output(EN_485,GPIO.LOW)
+        if appsettings.useMac == False:
+            GPIO.output(EN_485,GPIO.LOW)
         if not ser.is_open:
             # port is not open, we open the port
             ser.open()
