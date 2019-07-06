@@ -33,9 +33,9 @@ class BCmb(object):
     attempts = 1
 
     @staticmethod
-    def writeProgram(addr, program_in_json):
+    def writeProgramClient(hostname,addr, program_in_json):
         result = ACTION.FAIL
-        result = devInterface.sendCommandAndGetResponse(addr, 0x57, program_in_json, BCmb.timeout)
+        result = devInterface.sendClientCommandAndGetResponse(hostname,addr, 0x57, program_in_json, BCmb.timeout)
         print(result)
         if result != None:
             if result[1] == 'PASS':
@@ -45,9 +45,9 @@ class BCmb(object):
         return result
 
     @staticmethod
-    def run(addr):
+    def runClient(hostname,addr):
         result = ACTION.FAIL
-        result = devInterface.sendCommandAndGetResponse(addr, 0x33, "", BCmb.timeout)
+        result = devInterface.sendClientCommandAndGetResponse(hostname,addr, 0x33, "", BCmb.timeout)
         print(result)
         if result != None:
             if result[1] == 'PASS':
@@ -57,9 +57,9 @@ class BCmb(object):
         return result
 
     @staticmethod
-    def pause(addr):
+    def pauseClient(hostname,addr):
         result = ACTION.FAIL
-        result = devInterface.sendCommandAndGetResponse(addr, 0x34, "", BCmb.timeout)
+        result = devInterface.sendClientCommandAndGetResponse(hostname,addr, 0x34, "", BCmb.timeout)
         print(result)
         if result != None:
             if result[1] == 'PASS':
@@ -69,9 +69,9 @@ class BCmb(object):
         return result
     
     @staticmethod
-    def stop(addr):
+    def stopClient(hostname,addr):
         result = ACTION.FAIL
-        result = devInterface.sendCommandAndGetResponse(addr, 0x35, "", BCmb.timeout)
+        result = devInterface.sendClientCommandAndGetResponse(hostname,addr, 0x35, "", BCmb.timeout)
         print(result)
         if result != None:
             if result[1] == 'PASS':
@@ -81,9 +81,21 @@ class BCmb(object):
         return result
 
     @staticmethod
-    def readProgram(addr):
+    def readProgramClient(hostname,addr):
         result = ACTION.FAIL
-        result = devInterface.sendCommandAndGetResponse(addr, 0x52, "", BCmb.timeout)
+        result = devInterface.sendClientCommandAndGetResponse(hostname,addr, 0x52, "", BCmb.timeout)
+        print(result)
+        if result != None:
+            if result[1] == 'PASS':
+                result = ACTION.PASS
+            else:
+                result = ACTION.FAIL
+        return result
+    '''
+    @staticmethod
+    def readVoltageClient(hostname,addr):
+        result = ACTION.FAIL
+        result = devInterface.sendClientCommandAndGetResponse(hostname,addr, 0x56, "", BCmb.timeout)
         print(result)
         if result != None:
             if result[1] == 'PASS':
@@ -93,9 +105,9 @@ class BCmb(object):
         return result
 
     @staticmethod
-    def readVoltage(addr):
+    def readTemperatureClient(hostname,addr):
         result = ACTION.FAIL
-        result = devInterface.sendCommandAndGetResponse(addr, 0x56, "", BCmb.timeout)
+        result = devInterface.sendClientCommandAndGetResponse(hostname,addr, 0x54, "", BCmb.timeout)
         print(result)
         if result != None:
             if result[1] == 'PASS':
@@ -105,9 +117,9 @@ class BCmb(object):
         return result
 
     @staticmethod
-    def readTemperature(addr):
+    def readCurrentClient(hostname,addr):
         result = ACTION.FAIL
-        result = devInterface.sendCommandAndGetResponse(addr, 0x54, "", BCmb.timeout)
+        result = devInterface.sendClientCommandAndGetResponse(hostname,addr, 0x49, "", BCmb.timeout)
         print(result)
         if result != None:
             if result[1] == 'PASS':
@@ -115,21 +127,9 @@ class BCmb(object):
             else:
                 result = ACTION.FAIL
         return result
-
+    
     @staticmethod
-    def readCurrent(addr):
-        result = ACTION.FAIL
-        result = devInterface.sendCommandAndGetResponse(addr, 0x49, "", BCmb.timeout)
-        print(result)
-        if result != None:
-            if result[1] == 'PASS':
-                result = ACTION.PASS
-            else:
-                result = ACTION.FAIL
-        return result
-
-    @staticmethod
-    def readData(addr):
+    def readDataClient(hostname,addr):
         result = ACTION.FAIL
         result = devInterface.sendCommandAndGetResponse(addr, 0x43, "", 0.25)
         print(result)
@@ -139,11 +139,12 @@ class BCmb(object):
             else:
                 result = ACTION.FAIL
         return result
+    '''
 
     @staticmethod
-    def readStep(addr):
+    def readStepClient(hostname,addr):
         result = ACTION.FAIL
-        result = devInterface.sendCommandAndGetResponse(addr, 0x50, "", BCmb.timeout)
+        result = devInterface.sendClientCommandAndGetResponse(hostname,addr, 0x50, "", BCmb.timeout)
         print(result)
         if result != None:
             if result[1] == 'PASS':
@@ -151,11 +152,11 @@ class BCmb(object):
             else:
                 result = ACTION.FAIL
         return result
-
+    '''
     @staticmethod
-    def readType(addr):
+    def readTypeClient(hostname,addr):
         result = ACTION.FAIL
-        result = devInterface.sendCommandAndGetResponse(addr, 0x50, "", BCmb.timeout)
+        result = devInterface.sendClientCommandAndGetResponse(hostname,addr, 0x50, "", BCmb.timeout)
         print(result)
         if result != None:
             if result[1] == 'PASS':
@@ -163,11 +164,12 @@ class BCmb(object):
             else:
                 result = ACTION.FAIL
         return result
+    '''
 
     @staticmethod
-    def currentTime(addr):
+    def currentTimeClient(hostname,addr):
         result = ACTION.FAIL
-        result = devInterface.sendCommandAndGetResponse(addr, 0x74, "", BCmb.timeout)
+        result = devInterface.sendClientCommandAndGetResponse(hostname,addr, 0x74, "", BCmb.timeout)
         print(result)
         if result != None:
             if result[1] == 'PASS':
@@ -200,6 +202,7 @@ class BCmb(object):
                 result = ACTION.FAIL
         return result
 
+    '''
     @staticmethod
     def writeProgramFake(addr, program_in_json):
         result = ACTION.FAIL
@@ -211,11 +214,12 @@ class BCmb(object):
             else:
                 result = ACTION.FAIL
         return result
+    '''
 
     @staticmethod
-    def readCurrentClient(hostname, addr):
+    def readDataClient(hostname, addr):
         result = ACTION.FAIL
-        result = devInterface.sendClientCommandAndGetResponse(hostname,addr, 0x49, "", BCmb.timeout)
+        result = devInterface.sendClientCommandAndGetResponse(hostname,addr, 0x43, "", BCmb.timeout)
         print(result)
         if result != None:
             if result[1] == 'PASS':
@@ -235,19 +239,29 @@ if __name__ == "__main__":
     #BCmb.readStep(0)
     #BCmb.currentTime(0)
     #BCmb.readProgram(0)
-    #BCmb.readCurrentClient('raspberrypi.local', 5)
+    #BCmb.readDataClient('raspberrypi.local', 1)
     
     #BCmb.stop(1)
-    BCmb.readData(2)
+    #BCmb.readData(2)
     '''
     BCmb.getAddress()
     BCmb.readProgram(2)
     BCmb.run(2)
     '''
 
+    #BCmb.runClient('raspberrypi.local', 2)
+    #BCmb.pauseClient('raspberrypi.local', 2)
+    #BCmb.stopClient('raspberrypi.local', 2)
+    #BCmb.readStepClient('raspberrypi.local', 2)
+    #BCmb.currentTimeClient('raspberrypi.local', 2)
+    #BCmb.readProgramClient('raspberrypi.local', 2)
+    #BCmb.writeProgramClient('raspberrypi.local',2,"[{\"Type\":\"Begin\"},{\"Type\":\"Pause\",\"Time\":\"10000\"},{\"Type\":\"Charge\",\"Time\":\"120000\",\"Current\":\"8.0\"},{\"Type\":\"Charge\",\"Time\":\"50000\",\"Current\":\"12.0\"},{\"Type\":\"Carga\",\"Time\":\"60000\",\"Current\":\"15.0\"},{\"Type\":\"Charge\",\"Time\":\"40000\",\"Current\":\"20.0\"},{\"Type\":\"Pause\",\"Time\":\"20000\"},{\"Type\":\"Charge\",\"Time\":\"30000\",\"Current\":\"10.5\"},{\"Type\":\"Charge\",\"Time\":\"40000\",\"Current\":\"14.5\"},{\"Type\":\"End\"}]")
+
     
     '''
     while True:
-        BCmb.readData(1)
+        #BCmb.readData(1)
+        BCmb.readDataClient('raspberrypi.local', 1)
+        BCmb.readDataClient('raspberrypi.local', 2)
         sleep(.1)
     '''

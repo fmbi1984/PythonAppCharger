@@ -64,7 +64,7 @@ class devInterface(object):
             #sp = SerialPortUtil.getFirstPortByVID_PID(0x067b,0x2303)
             #sp = SerialPortUtil.getFirstPortByVID_PID(0x10c4,0xea60)
             if sp == None:
-                raise Exception("devInterface", "No serial device " + appsettings.FTDI_serialNumber + " found!")
+                raise Exception("devInterface", "No serial device found!")
             sct = SerialCommThread(None, sp, appsettings.FTDI_baudRate, p_data, b'\x04',timeout,5)
             sct.start()
             sct.join()
@@ -95,7 +95,7 @@ class devInterface(object):
 
             if hostname == None:
                 raise Exception("devInterface", "No hostname device found!")
-            sct = ClientCommThread(None, 'raspberrypi.local', p_data, b'\x04',timeout,5)
+            sct = ClientCommThread(None, 'raspberrypi.local', p_data, b'\x04',timeout,1)
             sct.start()
             sct.join()
             print("client thread stopped")
