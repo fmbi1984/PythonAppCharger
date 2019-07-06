@@ -129,6 +129,18 @@ class BCmb(object):
         return result
 
     @staticmethod
+    def readData(addr):
+        result = ACTION.FAIL
+        result = devInterface.sendCommandAndGetResponse(addr, 0x43, "", 0.25)
+        print(result)
+        if result != None:
+            if result[1] == 'PASS':
+                result = ACTION.PASS
+            else:
+                result = ACTION.FAIL
+        return result
+
+    @staticmethod
     def readStep(addr):
         result = ACTION.FAIL
         result = devInterface.sendCommandAndGetResponse(addr, 0x50, "", BCmb.timeout)

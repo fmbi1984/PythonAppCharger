@@ -72,6 +72,7 @@ def client_thread(conn):
 
         sp.write(data)
         #sleep(.002)
+
         while sp.inWaiting()>0:
             n = sp.inWaiting()
             for _ in range(0, n):
@@ -80,6 +81,7 @@ def client_thread(conn):
                 if len(reading) > 0:
                     handle_data(reading)
                     print("reading > 0")
+        
         sp.close()
         
         reply = b'OK . . '
