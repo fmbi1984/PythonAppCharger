@@ -237,12 +237,12 @@ if __name__ == "__main__":
     #BCmb.readProgram(0)
     #BCmb.readCurrentClient('raspberrypi.local', 5)
     
-    BCmb.stop(1)
-    
+    #BCmb.stop(1)
+    BCmb.readData(2)
     '''
     BCmb.getAddress()
-    BCmb.readProgram(1)
-    BCmb.run(1)
+    BCmb.readProgram(2)
+    BCmb.run(2)
     '''
 
     

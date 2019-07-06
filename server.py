@@ -5,13 +5,14 @@ from _thread import start_new_thread
 import USBUtils
 import SerialPortUtil
 import StringUtils
+from serialcommthread import SerialCommThread, serial_cmd_result
 
 from time import sleep, time
 
 import serial
 import appsettings
 
-serial_cmd_result = [None]
+'''
 _dataByteArray = []
 _dataBytesLiteral = b''
 _packet_being_received = False
@@ -20,6 +21,8 @@ _end_char = b'\x04'
 
 _flagcommand = False
 _msgwasreceived = False
+
+'''
 
 HOST = 'raspberrypi.local' # all availabe interfaces
 PORT = 65433 # arbitrary non privileged port
@@ -49,12 +52,51 @@ def client_thread(conn):
     
 
     while True:
-        data = conn.recv(1024)
-        if not data:
+        p_data = conn.recv(1024)
+        if not p_data:
             break
         
+        result = None
+        data = None
+        try:
+            #cmd_data = bytes(cmd,'ISO-8859-1')
+            #p_data = devInterface.packMessage(address, op, cmd_data)
+
+            if appsettings.useDongle == True:
+                print("Test Mac")
+                sp = SerialPortUtil.getFirstPortByVID_PID(0x1a86,0x7523)
+            else:
+                print("Test Raspbian")
+                sp = SerialPortUtil.getPortByName("/dev/ttyS0")
+                print(sp)
+            #sp = SerialPortUtil.getPortBySerialNumber(appsettings.FTDI_serialNumber)
+            #sp = SerialPortUtil.getFirstPortByVID_PID(0x067b,0x2303)
+            #sp = SerialPortUtil.getFirstPortByVID_PID(0x10c4,0xea60)
+            if sp == None:
+                raise Exception("devInterface", "No serial device found!")
+            print(p_data)
+            sct = SerialCommThread(None, sp, appsettings.FTDI_baudRate, p_data, b'\x04',10,5)
+            sct.start()
+            sct.join()
+            #print("serial thread stopped")
+            #if sct.stopped() == False:
+            #    e="serial thread not stopped"
+            #    print("\033[1;31;40m"+str(e)+"\033[0;37;40m")
+
+            data = serial_cmd_result[0]
+            print(data)
+            '''
+            result = None
+            if data != None:
+                result = devInterface.decodeMessage(data)
+            else:
+                result = None
+            '''
+        except Exception as e:
+            print("\033[1;31;40m"+str(e)+"\033[0;37;40m")
+        #return result
         
-        
+        '''
         sp = None
         if appsettings.useDongle == True:
             print("Test Mac")
@@ -67,9 +109,11 @@ def client_thread(conn):
         sp.flushInput()
         sp.flushOutput()
 
+
         if not sp.is_open:
             sp.open()
-
+        
+        
         sp.write(data)
         #sleep(.002)
 
@@ -83,14 +127,15 @@ def client_thread(conn):
                     print("reading > 0")
         
         sp.close()
-        
-        reply = b'OK . . '
+        '''
+        #reply = b'OK . . '
         #reply = serial_cmd_result[0]
-        print('Received', repr(data))
-        conn.sendall(reply)
+        #print('Received', repr(data))
+        conn.sendall(bytes(data))
     print("[-] Closed connection")
     conn.close()
 
+'''
 def addcbuff(c):
     if c == _end_char:
         _dataByteArray.append(ord(c))
@@ -126,7 +171,7 @@ def process_data():
     #print("process")
     _msgwasreceived = True
     serial_cmd_result[0] = _dataByteArray.copy()
-
+'''
 while True:
     # blocking call, waits to accept a connection
     conn, addr = s.accept()

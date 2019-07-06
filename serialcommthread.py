@@ -115,7 +115,7 @@ class SerialCommThread(Thread):
             if self._serialport != None:
 
                 
-
+                print("clear result")
                 serial_cmd_result[0] = None
                 self._msgwasreceived = False
                 for n in range(0, self._attemps):
@@ -164,7 +164,7 @@ class SerialCommThread(Thread):
                             #print(self._elapsed)
 
                             if self._end_char:
-
+                                print("read from port")
                                 self.read_from_port(self._serialport)
 
 
@@ -222,9 +222,9 @@ class SerialCommThread(Thread):
             self.process_data(self._serialport)
             #print(c)
             self._packet_being_received = False
-            #print("END")
+            print("END")
         elif (c == self._begin_char) and (len(self._dataByteArray)<2):
-            #print("BEGIN")
+            print("BEGIN")
             self._packet_being_received = True
             self._flagcommand = False
             self.inicbuff()
@@ -264,9 +264,10 @@ class SerialCommThread(Thread):
                         self.handle_data(ser, reading)
 
     def process_data(self, ser):
-        #print("process")
+        print("process")
         self._msgwasreceived = True
         serial_cmd_result[0] = self._dataByteArray.copy()
+        print(serial_cmd_result[0])
 
     def tryToReconnect(self):
         print("try to reconnect")

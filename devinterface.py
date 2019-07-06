@@ -74,6 +74,8 @@ class devInterface(object):
                 print("\033[1;31;40m"+str(e)+"\033[0;37;40m")
 
             data = serial_cmd_result[0]
+            print("Frank:")
+            print(data)
             result = None
             if data != None:
                 result = devInterface.decodeMessage(data)
@@ -102,6 +104,8 @@ class devInterface(object):
                 print("\033[1;31;40m"+str(e)+"\033[0;37;40m")
 
             data = client_cmd_result[0]
+            print("Frank:")
+            print(data)
             result = None
             if data != None:
                 result = devInterface.decodeMessage(data)
