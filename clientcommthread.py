@@ -105,13 +105,16 @@ class ClientCommThread(Thread):
                             data = s.recv(1024)
 
                         print('Received', repr(data))
+                        
                         self._msgwasreceived == True
+                        client_cmd_result[0]=data
+
 
                         if self._msgwasreceived == True or self._stopevent.is_set():
                             break
 
                     else:
-                        sleep(self._timeout)
+                        sleep(1)
 
                     self._flagcommand = False
                     self.inicbuff()

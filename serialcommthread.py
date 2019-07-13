@@ -73,7 +73,7 @@ class SerialCommThread(Thread):
             self._serialport.baudrate = self._baudrate
             self._serialport.rtscts = False
             self._serialport.dsrdtr = False
-            self._serialport.timeout = 10
+            self._serialport.timeout = 1
             self._serialport.writeTimeout = 1
             self._serialport.stopbits = serial.STOPBITS_ONE
             self._serialport.parity = serial.PARITY_NONE
@@ -164,7 +164,7 @@ class SerialCommThread(Thread):
                             #print(self._elapsed)
 
                             if self._end_char:
-                                print("read from port")
+                                #print("read from port")
                                 self.read_from_port(self._serialport)
 
 
@@ -180,7 +180,7 @@ class SerialCommThread(Thread):
                                 break
                     
                     else:
-                        sleep(self._timeout)
+                        sleep(1)
 
                     self._flagcommand = False
                     self.inicbuff()

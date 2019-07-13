@@ -75,7 +75,7 @@ def client_thread(conn):
             if sp == None:
                 raise Exception("devInterface", "No serial device found!")
             print(p_data)
-            sct = SerialCommThread(None, sp, appsettings.FTDI_baudRate, p_data, b'\x04',10,5)
+            sct = SerialCommThread(None, sp, appsettings.FTDI_baudRate, p_data, b'\x04',1,5)
             sct.start()
             sct.join()
             #print("serial thread stopped")

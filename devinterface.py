@@ -95,6 +95,12 @@ class devInterface(object):
 
             if hostname == None:
                 raise Exception("devInterface", "No hostname device found!")
+            print("Sent:")
+            print(p_data)
+            print(p_data[6])
+            #if p_data[6] != 4:
+            #    print("ERROR")
+            
             sct = ClientCommThread(None, 'raspberrypi.local', p_data, b'\x04',timeout,1)
             sct.start()
             sct.join()
@@ -104,7 +110,7 @@ class devInterface(object):
                 print("\033[1;31;40m"+str(e)+"\033[0;37;40m")
 
             data = client_cmd_result[0]
-            print("Frank:")
+            print("FrankClient")
             print(data)
             result = None
             if data != None:
