@@ -114,7 +114,7 @@ class ClientCommThread(Thread):
                             break
 
                     else:
-                        sleep(1)
+                        sleep(self._timeout)
 
                     self._flagcommand = False
                     self.inicbuff()

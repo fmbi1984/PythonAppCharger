@@ -35,7 +35,7 @@ class BCmb(object):
     @staticmethod
     def writeProgramClient(hostname,addr, program_in_json):
         result = ACTION.FAIL
-        result = devInterface.sendClientCommandAndGetResponse(hostname,addr, 0x57, program_in_json, BCmb.timeout)
+        result = devInterface.sendClientCommandAndGetResponse(hostname,addr, 0x57, program_in_json, 10)
         print(result)
         if result != None:
             if result[1] == 'PASS':
@@ -252,12 +252,12 @@ if __name__ == "__main__":
     BCmb.run(2)
     '''
 
-    #BCmb.runClient('raspberrypi.local', 1)
+    #BCmb.runClient('raspberrypi.local', 2)
     #BCmb.pauseClient('raspberrypi.local', 1)
-    #BCmb.stopClient('raspberrypi.local', 1)
+    BCmb.stopClient('raspberrypi.local', 1)
     #BCmb.stopClient('raspberrypi.local', 2)
     #BCmb.readDataClient('raspberrypi.local',1)
-    #BCmb.readStepClient('raspberrypi.local', 1)
+    #BCmb.readStepClient('raspberrypi.local', 2)
     #BCmb.currentTimeClient('raspberrypi.local', 1)
     #BCmb.readProgramClient('raspberrypi.local',1)
     #BCmb.writeProgramClient('raspberrypi.local',1,"[{\"Type\":\"Begin\"},{\"Type\":\"Pause\",\"Time\":\"10000\"},{\"Type\":\"Charge\",\"Time\":\"1200000\",\"Current\":\"20.0\"},{\"Type\":\"Charge\",\"Time\":\"900000\",\"Current\":\"22.7\"},{\"Type\":\"Carga\",\"Time\":\"1200000\",\"Current\":\"27.0\"},{\"Type\":\"Charge\",\"Time\":\"180000\",\"Current\":\"24.0\"},{\"Type\":\"Pause\",\"Time\":\"60000\"},{\"Type\":\"Charge\",\"Time\":\"1200000\",\"Current\":\"26.5\"},{\"Type\":\"Charge\",\"Time\":\"600000\",\"Current\":\"30.0\"},{\"Type\":\"End\"}]")
@@ -269,6 +269,6 @@ if __name__ == "__main__":
     while True:
         #BCmb.readData(1)
         #BCmb.readDataClient('raspberrypi.local', 1)
-        #BCmb.readDataClient('raspberrypi.local', 2)
+        BCmb.readDataClient('raspberrypi.local', 2)
         sleep(.1)
     #'''
