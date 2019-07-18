@@ -36,21 +36,38 @@ class DataListener(Thread):
     def run(self):
 
         print(self._name+" started")
-        number=0
+        #number=0
+        readData1= bytearray
+        readData2= bytearray
         while not self._stop_event.is_set():
             #1.read data
-            #BCmb.readDataClient('raspberrypi.local', 1)
-            #BCmb.readDataClient('raspberrypi.local', 2)
+            readData1 = BCmb.readDataClient('raspberrypi.local', 1)
+            #readData2 = BCmb.readDataClient('raspberrypi.local', 2)
+            #readData2 = BCmb.pingClient('raspberrypi.local', 3)
             
             #2.parse string to update UI
 
             #3.send to UI
-            number = number + 1
-            self.dataStr = str(number)
+            #number = number + 1
+            print("readData1")
+            #print(readData1)
+            #print(readData2)
+            self.dataStr = str(readData1[0])
+
             #print(self.dataStr)
             if self.mySrc != None:
                 self.mySrc.myGUI_signal.emit("DataListener[True]:"+self.dataStr)
-            sleep(.1)
+            sleep(.5)
+
+            self.dataStr = str(readData1[1])
+            if self.mySrc != None:
+                self.mySrc.myGUI_signal.emit("DataListener[True]:"+self.dataStr)
+            sleep(.5)    
+
+            self.dataStr = str(readData1[2])
+            if self.mySrc != None:
+                self.mySrc.myGUI_signal.emit("DataListener[True]:"+self.dataStr)    
+            sleep(.5)
         print(self._name+" stopped")
            
 
