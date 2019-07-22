@@ -237,9 +237,9 @@ class BCmb(object):
         print(result)
         if result != None:
             if result[1] == 'PASS':
-                result = ACTION.PASS
+                result = True
             else:
-                result = ACTION.FAIL
+                result = False
         return result    
 
 

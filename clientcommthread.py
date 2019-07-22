@@ -80,64 +80,69 @@ class ClientCommThread(Thread):
         self._wasStopped.clear()
 
     def run(self):
+        try:
+            while not self._msgwasreceived and not self._stopevent.is_set():
+                if self._hostname != None:
 
-        while not self._msgwasreceived and not self._stopevent.is_set():
-            if self._hostname != None:
+                    client_cmd_result[0] = None
+                    self._msgwasreceived = False
+                    for n in range(0, self._attemps):
 
-                client_cmd_result[0] = None
-                self._msgwasreceived = False
-                for n in range(0, self._attemps):
+                        if self._messagetosend != None:
 
-                    if self._messagetosend != None:
+                            print("doing attempt no."+str(n+1)+" msg:"+ ''.join(str( bytes(self._messagetosend), 'ISO-8859-1')))
 
-                        print("doing attempt no."+str(n+1)+" msg:"+ ''.join(str( bytes(self._messagetosend), 'ISO-8859-1')))
+                            HOST = self._hostname  # The server's hostname or IP address
+                            PORT = 65433        # The port used by the server
 
-                        HOST = self._hostname  # The server's hostname or IP address
-                        PORT = 65433        # The port used by the server
+                            client_cmd_result[0] = None
+                            self.flag_command = False
+                            self.inicbuff()
 
-                        client_cmd_result[0] = None
-                        self.flag_command = False
+                            with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+                                s.connect((HOST, PORT))
+                                s.sendall(bytes(self._messagetosend))
+                                data = s.recv(1024)
+
+                            print('Received', repr(data))
+                            
+                            self._msgwasreceived == True
+                            client_cmd_result[0]=data
+
+
+                            if self._msgwasreceived == True or self._stopevent.is_set():
+                                break
+
+                        else:
+                            sleep(self._timeout)
+
+                        self._flagcommand = False
                         self.inicbuff()
-
-                        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-                            s.connect((HOST, PORT))
-                            s.sendall(bytes(self._messagetosend))
-                            data = s.recv(1024)
-
-                        print('Received', repr(data))
-                        
-                        self._msgwasreceived == True
-                        client_cmd_result[0]=data
-
+                        #print("done client loop")
 
                         if self._msgwasreceived == True or self._stopevent.is_set():
+                            #print("message was received")
                             break
-
-                    else:
-                        sleep(self._timeout)
 
                     self._flagcommand = False
                     self.inicbuff()
-                    #print("done client loop")
 
-                    if self._msgwasreceived == True or self._stopevent.is_set():
-                        #print("message was received")
-                        break
+                    self.stop()
 
-                self._flagcommand = False
-                self.inicbuff()
+                    #lock.release()
+                else:
+                    self.stop()
+                    raise Exception("Hostname", "No hostname found!")
 
-                self.stop()
+            #print("client thread stopped")
+            self._wasStopped.set()
+            #lock.release()
+        except:
+            print("ERROR SERVER")
+            self.stop()
 
-                #lock.release()
-            else:
-                self.stop()
-                raise Exception("Hostname", "No hostname found!")
-
-        #print("client thread stopped")
-        self._wasStopped.set()
-        #lock.release()
     def stop(self):
+        print("stop was done in "+self._name)
         self._stopevent.set()
 
     def stopped(self):

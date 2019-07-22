@@ -10,8 +10,16 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 
 from datalistener import DataListener
 from devicemainboard import BCmb
+import shared
+
+import time
+import threading
+
+from datetime import timedelta
 
 class Ui_MainWindow(object):
+    
+
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(902, 553)
@@ -345,6 +353,8 @@ class Ui_MainWindow(object):
 
     def showEvent(self, event):
         print("show")
+        self.display()
+        
 
     
     def closeEvent(self, event):
@@ -375,22 +385,88 @@ class Ui_MainWindow(object):
         print("Detener 2")
         BCmb.stopClient('raspberrypi.local', 2)
 
+
+    WAIT_SECONDS = 1
+
+    def display(self):
+        print(time.ctime())
+        
+        if shared.DEV[1][0] == True:
+            newstr1 = ""
+            if self.stateDisplay1 == 1:
+                #current
+                newstr1 = str(shared.DEV[1][1])+" A"
+            if self.stateDisplay1 == 2:
+                #voltage
+                newstr1 = str(shared.DEV[1][2]) + " V"
+            if self.stateDisplay1 == 3:
+                #temperature
+                newstr1 = str(shared.DEV[1][3]) + " °C"
+            self.cmdDisplay1.setText(str(newstr1))
+
+        
+
+        if shared.DEV[2][0] == True:
+            newstr2 = ""
+            if self.stateDisplay2 == 1:
+                #current
+                newstr2 = str(shared.DEV[2][1])+" A"
+            if self.stateDisplay2 == 2:
+                #voltage
+                newstr2 = str(shared.DEV[2][2]) + " V"
+            if self.stateDisplay2 == 3:
+                #temperature
+                newstr2 = str(shared.DEV[2][3])+ " °C"
+            self.cmdDisplay2.setText(str(newstr2))
+
+        threading.Timer(self.WAIT_SECONDS, self.display).start()
+        
+        
+    
+
+    stateDisplay1 = 1
     def on_cmdDisplay1_clicked(self):
         print("Display 1")
-    
+        self.stateDisplay1 = self.stateDisplay1 + 1
+        if self.stateDisplay1==4 :
+            self.stateDisplay1 = 1
+        print(self.stateDisplay1)
+
+
+    stateDisplay2 = 1
     def on_cmdDisplay2_clicked(self):
         print("Display 2")
+        self.stateDisplay2 = self.stateDisplay2 + 1
+        if self.stateDisplay2==4 :
+            self.stateDisplay2 = 1
+        print(self.stateDisplay2)
 
     def testsCallback(self, msg):
-        if "DataListener[True]" in msg:
-            msg = msg.replace("DataListener[True]:","")
-            #newstr = msg.split(',')
+
+        address = 1
+        if "DL["+str(address)+"]" in msg:
+            msg = msg.replace("DL["+str(address)+"]:","")
+
+            #self.cmdDisplay1.setText(str(newstr1))
+            self.cmdDisplay1.repaint()
+            self.cmdDisplay1.update()
+            self.cmdDisplay1.setUpdatesEnabled(True)
+            
+            #self.cmdDisplay2.setText(str(newstr2))
+            self.cmdDisplay2.repaint()
+            self.cmdDisplay2.update()
+            self.cmdDisplay2.setUpdatesEnabled(True)
+        '''
+
             newstr = msg
             print (newstr)
+
+
             self.cmdDisplay1.setText(str(newstr))
             self.cmdDisplay1.repaint()
             self.cmdDisplay1.update()
             self.cmdDisplay1.setUpdatesEnabled(True)
+        '''
 
     def on_cmdIniciarActualizar_clicked(self):
         print("Iniciar Actualizar")
@@ -400,6 +476,27 @@ class Ui_MainWindow(object):
     def on_cmdDetenerActualizar_clicked(self):
         print("Detener Actualizar")
         self.dataThread.stop()
+
+
+    def pingForDevicesPresent(self):
+        # we do ping to the devices 
+        devStart = 1
+        devStop = 2
+        for i in range(devStart, devStop+1):
+            address=i
+            print("Doing ping to device No."+str(address))
+            readData = BCmb.pingClient('raspberrypi.local', address)
+            print("VALUE:")
+            print(str(readData))
+            shared.DEV[i][0] = False
+            if readData!= None:
+                if readData == True:
+                    shared.DEV[i][0] = True
+                    print("DEV"+str(address)+" is Present!")  
+                else:
+                    print("DEV"+str(address)+" is not Present!")
+            else:
+                print("DEV"+str(address)+" is not Present!")
 
 if __name__ == "__main__":
     import sys
