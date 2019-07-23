@@ -339,6 +339,7 @@ class Ui_MainWindow(object):
     
     def closeEvent(self, event):
         print("close")
+        self.WAIT_ACTIVE = 0
 
     def on_cmdIniciar1_clicked(self):
         
@@ -379,6 +380,8 @@ class Ui_MainWindow(object):
 
     WAIT_SECONDS = 1
 
+    WAIT_ACTIVE = 1
+
     def display(self):
         print(time.ctime())
         
@@ -410,7 +413,9 @@ class Ui_MainWindow(object):
                 newstr2 = str(shared.DEV[2][3])+ " °C"
             self.cmdDisplay2.setText(str(newstr2))
 
-        threading.Timer(self.WAIT_SECONDS, self.display).start()
+        self.th = threading.Timer(self.WAIT_SECONDS, self.display)
+        if self.WAIT_ACTIVE == 1:
+            self.th.start()
         
         
     
