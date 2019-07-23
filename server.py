@@ -23,7 +23,7 @@ _flagcommand = False
 _msgwasreceived = False
 
 '''
-
+sleep(10)
 HOST = 'raspberrypi.local' # all availabe interfaces
 PORT = 65433 # arbitrary non privileged port
 
@@ -139,7 +139,10 @@ def client_thread(conn):
         #reply = b'OK . . '
         #reply = serial_cmd_result[0]
         #print('Received', repr(data))
-        conn.sendall(bytes(data))
+        if data != None:
+            conn.sendall(bytes(data))
+        else:
+            conn.sendall(b'None')
     print("[-] Closed connection")
     conn.close()
 
