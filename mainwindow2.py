@@ -22,7 +22,7 @@ class Ui_MainWindow(object):
         self.centralWidget = QtWidgets.QWidget(MainWindow)
         self.centralWidget.setObjectName("centralWidget")
         self.tabWidget = QtWidgets.QTabWidget(self.centralWidget)
-        self.tabWidget.setGeometry(QtCore.QRect(20, 50, 871, 431))
+        self.tabWidget.setGeometry(QtCore.QRect(20, 50, 871, 411))
         self.tabWidget.setLayoutDirection(QtCore.Qt.LeftToRight)
         self.tabWidget.setTabShape(QtWidgets.QTabWidget.Rounded)
         self.tabWidget.setElideMode(QtCore.Qt.ElideRight)
@@ -131,14 +131,23 @@ class Ui_MainWindow(object):
         self.cmdDisplay1.setFlat(True)
         self.cmdDisplay1.setObjectName("cmdDisplay1")
         self.cmdIniciar1 = QtWidgets.QPushButton(self.tab)
-        self.cmdIniciar1.setGeometry(QtCore.QRect(750, 290, 91, 32))
+        self.cmdIniciar1.setGeometry(QtCore.QRect(80, 220, 151, 32))
         self.cmdIniciar1.setObjectName("cmdIniciar1")
         self.cmdPausar1 = QtWidgets.QPushButton(self.tab)
-        self.cmdPausar1.setGeometry(QtCore.QRect(750, 320, 91, 32))
+        self.cmdPausar1.setGeometry(QtCore.QRect(80, 250, 151, 32))
         self.cmdPausar1.setObjectName("cmdPausar1")
         self.cmdDetener1 = QtWidgets.QPushButton(self.tab)
-        self.cmdDetener1.setGeometry(QtCore.QRect(750, 350, 91, 32))
+        self.cmdDetener1.setGeometry(QtCore.QRect(80, 280, 151, 32))
         self.cmdDetener1.setObjectName("cmdDetener1")
+        self.cmdIniciar2 = QtWidgets.QPushButton(self.tab)
+        self.cmdIniciar2.setGeometry(QtCore.QRect(270, 220, 151, 32))
+        self.cmdIniciar2.setObjectName("cmdIniciar2")
+        self.cmdPausar2 = QtWidgets.QPushButton(self.tab)
+        self.cmdPausar2.setGeometry(QtCore.QRect(270, 250, 151, 32))
+        self.cmdPausar2.setObjectName("cmdPausar2")
+        self.cmdDetener2 = QtWidgets.QPushButton(self.tab)
+        self.cmdDetener2.setGeometry(QtCore.QRect(270, 280, 151, 32))
+        self.cmdDetener2.setObjectName("cmdDetener2")
         self.cmdDisplay2 = QtWidgets.QPushButton(self.tab)
         self.cmdDisplay2.setGeometry(QtCore.QRect(280, 140, 141, 32))
         font = QtGui.QFont()
@@ -149,12 +158,21 @@ class Ui_MainWindow(object):
         self.cmdDisplay2.setStyleSheet("QPushButton { background-color : yellow; color : black; border: 1px solid black; }")
         self.cmdDisplay2.setFlat(True)
         self.cmdDisplay2.setObjectName("cmdDisplay2")
+        self.cmdIniciarActualizar = QtWidgets.QPushButton(self.tab)
+        self.cmdIniciarActualizar.setGeometry(QtCore.QRect(720, 80, 141, 32))
+        self.cmdIniciarActualizar.setObjectName("cmdIniciarActualizar")
+        self.cmdDetenerActualizar = QtWidgets.QPushButton(self.tab)
+        self.cmdDetenerActualizar.setGeometry(QtCore.QRect(720, 110, 141, 32))
+        self.cmdDetenerActualizar.setObjectName("cmdDetenerActualizar")
         self.txtProgram = QtWidgets.QTextEdit(self.tab)
-        self.txtProgram.setGeometry(QtCore.QRect(210, 360, 341, 21))
+        self.txtProgram.setGeometry(QtCore.QRect(80, 350, 341, 21))
         self.txtProgram.setObjectName("txtProgram")
         self.cmdProgram1 = QtWidgets.QPushButton(self.tab)
-        self.cmdProgram1.setGeometry(QtCore.QRect(560, 350, 141, 32))
+        self.cmdProgram1.setGeometry(QtCore.QRect(80, 310, 151, 32))
         self.cmdProgram1.setObjectName("cmdProgram1")
+        self.cmdProgram2 = QtWidgets.QPushButton(self.tab)
+        self.cmdProgram2.setGeometry(QtCore.QRect(270, 310, 151, 32))
+        self.cmdProgram2.setObjectName("cmdProgram2")
         self.check1 = QtWidgets.QCheckBox(self.tab)
         self.check1.setGeometry(QtCore.QRect(70, 120, 86, 20))
         self.check1.setText("")
@@ -164,18 +182,12 @@ class Ui_MainWindow(object):
         self.check2.setText("")
         self.check2.setObjectName("check2")
         self.cmdGroup = QtWidgets.QPushButton(self.tab)
-        self.cmdGroup.setGeometry(QtCore.QRect(750, 260, 91, 32))
+        self.cmdGroup.setGeometry(QtCore.QRect(470, 210, 151, 32))
         self.cmdGroup.setObjectName("cmdGroup")
         self.tabWidget.addTab(self.tab, "")
         self.tab_2 = QtWidgets.QWidget()
         self.tab_2.setObjectName("tab_2")
         self.tabWidget.addTab(self.tab_2, "")
-        self.cmdIniciarActualizar = QtWidgets.QPushButton(self.centralWidget)
-        self.cmdIniciarActualizar.setGeometry(QtCore.QRect(600, 10, 141, 32))
-        self.cmdIniciarActualizar.setObjectName("cmdIniciarActualizar")
-        self.cmdDetenerActualizar = QtWidgets.QPushButton(self.centralWidget)
-        self.cmdDetenerActualizar.setGeometry(QtCore.QRect(750, 10, 141, 32))
-        self.cmdDetenerActualizar.setObjectName("cmdDetenerActualizar")
         MainWindow.setCentralWidget(self.centralWidget)
         self.menuBar = QtWidgets.QMenuBar(MainWindow)
         self.menuBar.setGeometry(QtCore.QRect(0, 0, 902, 22))
@@ -222,18 +234,21 @@ class Ui_MainWindow(object):
         self.tabWidget.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
-
         MainWindow.showEvent = self.showEvent
         MainWindow.closeEvent = self.closeEvent
 
         
         self.cmdIniciar1.clicked.connect(self.on_cmdIniciar1_clicked)
+        self.cmdIniciar2.clicked.connect(self.on_cmdIniciar2_clicked)
 
         self.cmdPausar1.clicked.connect(self.on_cmdPausar1_clicked)
+        self.cmdPausar2.clicked.connect(self.on_cmdPausar2_clicked)
 
         self.cmdDetener1.clicked.connect(self.on_cmdDetener1_clicked)
+        self.cmdDetener2.clicked.connect(self.on_cmdDetener2_clicked)
 
         self.cmdDisplay1.clicked.connect(self.on_cmdDisplay1_clicked)
+        self.cmdDisplay2.clicked.connect(self.on_cmdDisplay2_clicked)
 
         self.cmdIniciarActualizar.clicked.connect(self.on_cmdIniciarActualizar_clicked)
         self.cmdDetenerActualizar.clicked.connect(self.on_cmdDetenerActualizar_clicked)
@@ -281,6 +296,9 @@ class Ui_MainWindow(object):
         self.cmdIniciar1.setText(_translate("MainWindow", "Iniciar"))
         self.cmdPausar1.setText(_translate("MainWindow", "Pausar"))
         self.cmdDetener1.setText(_translate("MainWindow", "Detener"))
+        self.cmdIniciar2.setText(_translate("MainWindow", "Iniciar"))
+        self.cmdPausar2.setText(_translate("MainWindow", "Pausar"))
+        self.cmdDetener2.setText(_translate("MainWindow", "Detener"))
         self.cmdDisplay2.setToolTip(_translate("MainWindow", "Nombre: MF1\n"
 "Estado: No Conectado\n"
 "Corriente: 25.0\n"
@@ -296,12 +314,13 @@ class Ui_MainWindow(object):
 "ServerID: 0\n"
 "FirstN: 0"))
         self.cmdDisplay2.setText(_translate("MainWindow", "Apagar"))
-        self.cmdProgram1.setText(_translate("MainWindow", "Cargar Programa"))
-        self.cmdGroup.setText(_translate("MainWindow", "Selecionar"))
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), _translate("MainWindow", "Mesa 1"))
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), _translate("MainWindow", "Mesa 2"))
         self.cmdIniciarActualizar.setText(_translate("MainWindow", "Iniciar Actualizar"))
         self.cmdDetenerActualizar.setText(_translate("MainWindow", "Detener Actualizar"))
+        self.cmdProgram1.setText(_translate("MainWindow", "Cargar Programa"))
+        self.cmdProgram2.setText(_translate("MainWindow", "Cargar Programa"))
+        self.cmdGroup.setText(_translate("MainWindow", "Agrupar"))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), _translate("MainWindow", "Mesa 1"))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), _translate("MainWindow", "Mesa 2"))
         self.menuArchivo.setTitle(_translate("MainWindow", "Archivo"))
         self.menuVista.setTitle(_translate("MainWindow", "Vista"))
         self.menuCircuito.setTitle(_translate("MainWindow", "Circuito"))
@@ -312,6 +331,7 @@ class Ui_MainWindow(object):
         self.actionhh_2.setText(_translate("MainWindow", "hh"))
         self.actionjjk.setText(_translate("MainWindow", "jjk"))
         self.actionjkjkj.setText(_translate("MainWindow", "jkjkj"))
+
 
     def unitializeCheckbox(self):
         self.check1.setVisible(False)
@@ -341,35 +361,32 @@ class Ui_MainWindow(object):
         print("close")
 
     def on_cmdIniciar1_clicked(self):
-        print("Iniciar")
+        print("Iniciar 1")
         if self.check1.checkState == QtCore.Qt.Checked:
             BCmb.runClient('raspberrypi.local', 1)
         if self.check2.checkState == QtCore.Qt.Checked:
             BCmb.runClient('raspberrypi.local', 2)
     
     def on_cmdIniciar2_clicked(self):
-        print("Iniciar")
-        if self.check1.checkState == QtCore.Qt.Checked:
-            BCmb.runClient('raspberrypi.local', 1)
-        if self.check2.checkState == QtCore.Qt.Checked:
-            BCmb.runClient('raspberrypi.local', 2)
+        print("Iniciar 2")
+        BCmb.runClient('raspberrypi.local', 2)
     
 
     def on_cmdPausar1_clicked(self):
-        print("Pausar")
-        if self.check1.checkState == QtCore.Qt.Checked:
-            BCmb.pauseClient('raspberrypi.local', 1)
-        if self.check2.checkState == QtCore.Qt.Checked:
-            BCmb.pauseClient('raspberrypi.local', 2)
+        print("Pausar 1")
+        BCmb.pauseClient('raspberrypi.local', 1)
     
+    def on_cmdPausar2_clicked(self):
+        print("Pausar 2")
+        BCmb.pauseClient('raspberrypi.local', 2)
 
     def on_cmdDetener1_clicked(self):
-        print("Detener")
-        #if self.check1.checkState == QtCore.Qt.Checked:
+        print("Detener 1")
         BCmb.stopClient('raspberrypi.local', 1)
-        #if self.check2.checkState == QtCore.Qt.Checked:
-        BCmb.stopClient('raspberrypi.local', 2)
     
+    def on_cmdDetener2_clicked(self):
+        print("Detener 2")
+        BCmb.stopClient('raspberrypi.local', 2)
 
 
     WAIT_SECONDS = 1
@@ -483,7 +500,6 @@ class Ui_MainWindow(object):
                     print("DEV"+str(address)+" is not Present!")
             else:
                 print("DEV"+str(address)+" is not Present!")
-
 
 if __name__ == "__main__":
     import sys

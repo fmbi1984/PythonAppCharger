@@ -20,7 +20,7 @@
       <x>20</x>
       <y>50</y>
       <width>871</width>
-      <height>431</height>
+      <height>411</height>
      </rect>
     </property>
     <property name="layoutDirection">
@@ -293,9 +293,9 @@ FirstN: 0</string>
      <widget class="QPushButton" name="cmdIniciar1">
       <property name="geometry">
        <rect>
-        <x>750</x>
-        <y>290</y>
-        <width>91</width>
+        <x>80</x>
+        <y>220</y>
+        <width>151</width>
         <height>32</height>
        </rect>
       </property>
@@ -306,9 +306,9 @@ FirstN: 0</string>
      <widget class="QPushButton" name="cmdPausar1">
       <property name="geometry">
        <rect>
-        <x>750</x>
-        <y>320</y>
-        <width>91</width>
+        <x>80</x>
+        <y>250</y>
+        <width>151</width>
         <height>32</height>
        </rect>
       </property>
@@ -319,9 +319,48 @@ FirstN: 0</string>
      <widget class="QPushButton" name="cmdDetener1">
       <property name="geometry">
        <rect>
-        <x>750</x>
-        <y>350</y>
-        <width>91</width>
+        <x>80</x>
+        <y>280</y>
+        <width>151</width>
+        <height>32</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Detener</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="cmdIniciar2">
+      <property name="geometry">
+       <rect>
+        <x>270</x>
+        <y>220</y>
+        <width>151</width>
+        <height>32</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Iniciar</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="cmdPausar2">
+      <property name="geometry">
+       <rect>
+        <x>270</x>
+        <y>250</y>
+        <width>151</width>
+        <height>32</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Pausar</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="cmdDetener2">
+      <property name="geometry">
+       <rect>
+        <x>270</x>
+        <y>280</y>
+        <width>151</width>
         <height>32</height>
        </rect>
       </property>
@@ -371,11 +410,37 @@ FirstN: 0</string>
        <bool>true</bool>
       </property>
      </widget>
+     <widget class="QPushButton" name="cmdIniciarActualizar">
+      <property name="geometry">
+       <rect>
+        <x>720</x>
+        <y>80</y>
+        <width>141</width>
+        <height>32</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Iniciar Actualizar</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="cmdDetenerActualizar">
+      <property name="geometry">
+       <rect>
+        <x>720</x>
+        <y>110</y>
+        <width>141</width>
+        <height>32</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Detener Actualizar</string>
+      </property>
+     </widget>
      <widget class="QTextEdit" name="txtProgram">
       <property name="geometry">
        <rect>
-        <x>210</x>
-        <y>360</y>
+        <x>80</x>
+        <y>350</y>
         <width>341</width>
         <height>21</height>
        </rect>
@@ -384,9 +449,22 @@ FirstN: 0</string>
      <widget class="QPushButton" name="cmdProgram1">
       <property name="geometry">
        <rect>
-        <x>560</x>
-        <y>350</y>
-        <width>141</width>
+        <x>80</x>
+        <y>310</y>
+        <width>151</width>
+        <height>32</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Cargar Programa</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="cmdProgram2">
+      <property name="geometry">
+       <rect>
+        <x>270</x>
+        <y>310</y>
+        <width>151</width>
         <height>32</height>
        </rect>
       </property>
@@ -423,14 +501,14 @@ FirstN: 0</string>
      <widget class="QPushButton" name="cmdGroup">
       <property name="geometry">
        <rect>
-        <x>750</x>
-        <y>260</y>
-        <width>91</width>
+        <x>470</x>
+        <y>210</y>
+        <width>151</width>
         <height>32</height>
        </rect>
       </property>
       <property name="text">
-       <string>Selecionar</string>
+       <string>Agrupar</string>
       </property>
      </widget>
     </widget>
@@ -439,32 +517,6 @@ FirstN: 0</string>
       <string>Mesa 2</string>
      </attribute>
     </widget>
-   </widget>
-   <widget class="QPushButton" name="cmdIniciarActualizar">
-    <property name="geometry">
-     <rect>
-      <x>600</x>
-      <y>10</y>
-      <width>141</width>
-      <height>32</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Iniciar Actualizar</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="cmdDetenerActualizar">
-    <property name="geometry">
-     <rect>
-      <x>750</x>
-      <y>10</y>
-      <width>141</width>
-      <height>32</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Detener Actualizar</string>
-    </property>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menuBar">
