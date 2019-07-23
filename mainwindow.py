@@ -341,34 +341,33 @@ class Ui_MainWindow(object):
         print("close")
 
     def on_cmdIniciar1_clicked(self):
-        print("Iniciar")
-        if self.check1.checkState == QtCore.Qt.Checked:
+        
+        if self.check1.isChecked:
+            print("Iniciar 1")
             BCmb.runClient('raspberrypi.local', 1)
-        if self.check2.checkState == QtCore.Qt.Checked:
-            BCmb.runClient('raspberrypi.local', 2)
-    
-    def on_cmdIniciar2_clicked(self):
-        print("Iniciar")
-        if self.check1.checkState == QtCore.Qt.Checked:
-            BCmb.runClient('raspberrypi.local', 1)
-        if self.check2.checkState == QtCore.Qt.Checked:
+        if self.check2.isChecked:
+            print("Iniciar 2")
             BCmb.runClient('raspberrypi.local', 2)
     
 
     def on_cmdPausar1_clicked(self):
-        print("Pausar")
-        if self.check1.checkState == QtCore.Qt.Checked:
+        
+        if self.check1.isChecked:
+            print("Pausar 1")
             BCmb.pauseClient('raspberrypi.local', 1)
-        if self.check2.checkState == QtCore.Qt.Checked:
+        if self.check2.isChecked:
+            print("Pausar 2")
             BCmb.pauseClient('raspberrypi.local', 2)
     
 
     def on_cmdDetener1_clicked(self):
-        print("Detener")
-        #if self.check1.checkState == QtCore.Qt.Checked:
-        BCmb.stopClient('raspberrypi.local', 1)
-        #if self.check2.checkState == QtCore.Qt.Checked:
-        BCmb.stopClient('raspberrypi.local', 2)
+        
+        if self.check1.isChecked:
+            print("Detener 1")
+            BCmb.stopClient('raspberrypi.local', 1)
+        if self.check2.isChecked:
+            print("Detener 2")
+            BCmb.stopClient('raspberrypi.local', 2)
     
 
 
