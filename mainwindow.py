@@ -348,6 +348,8 @@ class Ui_MainWindow(object):
         if self.check2.isChecked:
             print("Iniciar 2")
             BCmb.runClient('raspberrypi.local', 2)
+
+        self.unitializeCheckbox()
     
 
     def on_cmdPausar1_clicked(self):
@@ -358,6 +360,8 @@ class Ui_MainWindow(object):
         if self.check2.isChecked:
             print("Pausar 2")
             BCmb.pauseClient('raspberrypi.local', 2)
+
+        self.unitializeCheckbox()
     
 
     def on_cmdDetener1_clicked(self):
@@ -368,6 +372,8 @@ class Ui_MainWindow(object):
         if self.check2.isChecked:
             print("Detener 2")
             BCmb.stopClient('raspberrypi.local', 2)
+
+        self.unitializeCheckbox()
     
 
 
