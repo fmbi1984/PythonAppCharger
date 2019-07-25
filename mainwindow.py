@@ -7,15 +7,21 @@
 # WARNING! All changes made in this file will be lost!
 
 from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5.QtCore import QTimer
+
+from time import sleep
 
 from datalistener import DataListener
 from devicemainboard import BCmb
+
 import shared
 import time
 import threading
 from datetime import timedelta
 
 class Ui_MainWindow(object):
+    hostname = 'raspberrypi.local'
+
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(902, 553)
@@ -120,6 +126,7 @@ class Ui_MainWindow(object):
 "}")
         self.progressBar_3.setProperty("value", 0)
         self.progressBar_3.setObjectName("progressBar_3")
+        
         self.cmdDisplay1 = QtWidgets.QPushButton(self.tab)
         self.cmdDisplay1.setGeometry(QtCore.QRect(90, 140, 141, 32))
         font = QtGui.QFont()
@@ -222,18 +229,19 @@ class Ui_MainWindow(object):
         self.tabWidget.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
+        self.MainWindow = MainWindow
 
         MainWindow.showEvent = self.showEvent
         MainWindow.closeEvent = self.closeEvent
 
-        
         self.cmdIniciar1.clicked.connect(self.on_cmdIniciar1_clicked)
 
         self.cmdPausar1.clicked.connect(self.on_cmdPausar1_clicked)
 
         self.cmdDetener1.clicked.connect(self.on_cmdDetener1_clicked)
 
-        self.cmdDisplay1.clicked.connect(self.on_cmdDisplay1_clicked)
+        self.cmdDisplay1.clicked.connect(self.on_cmdDisplay_clicked)
+        self.cmdDisplay2.clicked.connect(self.on_cmdDisplay_clicked)
 
         self.cmdIniciarActualizar.clicked.connect(self.on_cmdIniciarActualizar_clicked)
         self.cmdDetenerActualizar.clicked.connect(self.on_cmdDetenerActualizar_clicked)
@@ -313,6 +321,70 @@ class Ui_MainWindow(object):
         self.actionjjk.setText(_translate("MainWindow", "jjk"))
         self.actionjkjkj.setText(_translate("MainWindow", "jkjkj"))
 
+    def display(self):
+        print(time.ctime())
+
+        for index in range(1,4):
+            if shared.DEV[index][0] == True:
+                newstr1 = ""
+                if shared.DEV[index][9] == 1:
+                    #current
+                    newstr1 = str(shared.DEV[index][1])+" A"
+                if shared.DEV[index][9] == 2:
+                    #voltage
+                    newstr1 = str(shared.DEV[index][2]) + " V"
+                if shared.DEV[index][9] == 3:
+                    #temperature
+                    newstr1 = str(shared.DEV[index][3]) + " °C"
+                
+                cmdDisplay = getattr(self, "cmdDisplay"+str(index))
+                cmdDisplay.setText(str(newstr1))
+                
+                
+                pbObj = getattr(self, "pbProgram"+str(index))
+                if float(shared.DEV[index][6]) > 0:
+                    percentage = (100/float(shared.DEV[index][6])) * float(shared.DEV[index][5])
+                    pbObj.setValue(percentage)
+                else:
+                    pbObj.setValue(0)
+                
+                cmdDisplay.repaint()
+                cmdDisplay.update()
+                cmdDisplay.setUpdatesEnabled(True)
+
+                
+                pbObj.repaint()
+                pbObj.update()
+                pbObj.setUpdatesEnabled(True)
+            else:
+                print("ERROR PING")
+                
+            
+
+    
+    def tick(self):
+        print("tick")
+        #we update here our controls
+        self.display()
+
+
+    def showEvent(self, event):
+        print("show")
+        
+        self.timer = QTimer()
+        self.timer.timeout.connect(self.tick)
+        self.timer.setInterval(1000)
+        self.timer.start() 
+        
+        #self.display()
+
+        #self.unitializeCheckbox()
+
+
+    def closeEvent(self, event):
+        print("close")
+        #self.WAIT_ACTIVE = 0
+
     def unitializeCheckbox(self):
         self.check1.setVisible(False)
         self.check1.setCheckState(QtCore.Qt.Unchecked)
@@ -327,28 +399,20 @@ class Ui_MainWindow(object):
         self.check2.setVisible(True)
         self.check2.setCheckState(QtCore.Qt.Unchecked)
 
-    def showEvent(self, event):
-        print("show")
-        self.display()
-
-        self.unitializeCheckbox()
-
 
     def on_cmdGroup_clicked(self):  
         self.initializeCheckbox()
     
-    def closeEvent(self, event):
-        print("close")
-        self.WAIT_ACTIVE = 0
+  
 
     def on_cmdIniciar1_clicked(self):
         
         if self.check1.isChecked:
             print("Iniciar 1")
-            BCmb.runClient('raspberrypi.local', 1)
+            BCmb.runClient(self.hostname, 1)
         if self.check2.isChecked:
             print("Iniciar 2")
-            BCmb.runClient('raspberrypi.local', 2)
+            BCmb.runClient(self.hostname, 2)
 
         self.unitializeCheckbox()
     
@@ -357,10 +421,10 @@ class Ui_MainWindow(object):
         
         if self.check1.isChecked:
             print("Pausar 1")
-            BCmb.pauseClient('raspberrypi.local', 1)
+            BCmb.pauseClient(self.hostname, 1)
         if self.check2.isChecked:
             print("Pausar 2")
-            BCmb.pauseClient('raspberrypi.local', 2)
+            BCmb.pauseClient(self.hostname, 2)
 
         self.unitializeCheckbox()
     
@@ -369,87 +433,23 @@ class Ui_MainWindow(object):
         
         if self.check1.isChecked:
             print("Detener 1")
-            BCmb.stopClient('raspberrypi.local', 1)
+            BCmb.stopClient(self.hostname, 1)
         if self.check2.isChecked:
             print("Detener 2")
-            BCmb.stopClient('raspberrypi.local', 2)
+            BCmb.stopClient(self.hostname, 2)
 
         self.unitializeCheckbox()
-    
 
+    def on_cmdDisplay_clicked(self):
+        temp = self.MainWindow.sender().objectName()
+        temp2 = temp.replace("cmdDisplay", "")
+        print("Display "+temp2)
+        nDev = int(temp2)
 
-    WAIT_SECONDS = 1
-
-    WAIT_ACTIVE = 1
-
-    def display(self):
-        print(time.ctime())
-        
-        if shared.DEV[1][0] == True:
-            newstr1 = ""
-            if self.stateDisplay1 == 1:
-                #current
-                newstr1 = str(shared.DEV[1][1])+" A"
-            if self.stateDisplay1 == 2:
-                #voltage
-                newstr1 = str(shared.DEV[1][2]) + " V"
-            if self.stateDisplay1 == 3:
-                #temperature
-                newstr1 = str(shared.DEV[1][3]) + " °C"
-            self.cmdDisplay1.setText(str(newstr1))
-
-            if float(shared.DEV[1][6]) > 0:
-                percentage = (100/float(shared.DEV[1][6])) * float(shared.DEV[1][5])
-                self.pbProgram1.setValue(percentage)
-            else:
-                self.pbProgram1.setValue(0)
-
-        
-
-        if shared.DEV[2][0] == True:
-            newstr2 = ""
-            if self.stateDisplay2 == 1:
-                #current
-                newstr2 = str(shared.DEV[2][1])+" A"
-            if self.stateDisplay2 == 2:
-                #voltage
-                newstr2 = str(shared.DEV[2][2]) + " V"
-            if self.stateDisplay2 == 3:
-                #temperature
-                newstr2 = str(shared.DEV[2][3])+ " °C"
-            self.cmdDisplay2.setText(str(newstr2))
-
-            '''
-            if float(shared.DEV[1][6]) > 0:
-                percentage = (100/float(shared.DEV[2][6])) * float(shared.DEV[2][5])
-                self.pbProgram2.setValue(percentage)
-            else:
-                self.pbProgram2.setValue(0)
-            '''
-
-        self.th = threading.Timer(self.WAIT_SECONDS, self.display)
-        if self.WAIT_ACTIVE == 1:
-            self.th.start()
-        
-        
-    
-
-    stateDisplay1 = 1
-    def on_cmdDisplay1_clicked(self):
-        print("Display 1")
-        self.stateDisplay1 = self.stateDisplay1 + 1
-        if self.stateDisplay1==4 :
-            self.stateDisplay1 = 1
-        print(self.stateDisplay1)
-
-
-    stateDisplay2 = 1
-    def on_cmdDisplay2_clicked(self):
-        print("Display 2")
-        self.stateDisplay2 = self.stateDisplay2 + 1
-        if self.stateDisplay2==4 :
-            self.stateDisplay2 = 1
-        print(self.stateDisplay2)
+        shared.DEV[nDev][9] = shared.DEV[nDev][9] + 1
+        if shared.DEV[nDev][9]==4 :
+            shared.DEV[nDev][9] = 1
+        print(shared.DEV[nDev][9])
 
     def testsCallback(self, msg):
 
@@ -457,15 +457,7 @@ class Ui_MainWindow(object):
         if "DL["+str(address)+"]" in msg:
             msg = msg.replace("DL["+str(address)+"]:","")
 
-            #self.cmdDisplay1.setText(str(newstr1))
-            self.cmdDisplay1.repaint()
-            self.cmdDisplay1.update()
-            self.cmdDisplay1.setUpdatesEnabled(True)
             
-            #self.cmdDisplay2.setText(str(newstr2))
-            self.cmdDisplay2.repaint()
-            self.cmdDisplay2.update()
-            self.cmdDisplay2.setUpdatesEnabled(True)
 
         '''
 
@@ -496,7 +488,7 @@ class Ui_MainWindow(object):
         for i in range(devStart, devStop+1):
             address=i
             print("Doing ping to device No."+str(address))
-            readData = BCmb.pingClient('raspberrypi.local', address)
+            readData = BCmb.pingClient(self.hostname, address)
             print("VALUE:")
             print(str(readData))
             shared.DEV[i][0] = False
