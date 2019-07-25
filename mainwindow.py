@@ -398,6 +398,12 @@ class Ui_MainWindow(object):
                 newstr1 = str(shared.DEV[1][3]) + " °C"
             self.cmdDisplay1.setText(str(newstr1))
 
+            if float(shared.DEV[1][6]) > 0:
+                percentage = (100/float(shared.DEV[1][6])) * float(shared.DEV[1][5])
+                self.pbProgram1.setValue(percentage)
+            else:
+                self.pbProgram1.setValue(0)
+
         
 
         if shared.DEV[2][0] == True:
@@ -412,6 +418,14 @@ class Ui_MainWindow(object):
                 #temperature
                 newstr2 = str(shared.DEV[2][3])+ " °C"
             self.cmdDisplay2.setText(str(newstr2))
+
+            '''
+            if float(shared.DEV[1][6]) > 0:
+                percentage = (100/float(shared.DEV[2][6])) * float(shared.DEV[2][5])
+                self.pbProgram2.setValue(percentage)
+            else:
+                self.pbProgram2.setValue(0)
+            '''
 
         self.th = threading.Timer(self.WAIT_SECONDS, self.display)
         if self.WAIT_ACTIVE == 1:
@@ -452,6 +466,7 @@ class Ui_MainWindow(object):
             self.cmdDisplay2.repaint()
             self.cmdDisplay2.update()
             self.cmdDisplay2.setUpdatesEnabled(True)
+
         '''
 
             newstr = msg

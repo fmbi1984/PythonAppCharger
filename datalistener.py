@@ -68,8 +68,9 @@ class DataListener(Thread):
                         shared.DEV[address][4] = str(readData[3]).replace('P','')
                         #we store time of current step
                         shared.DEV[address][5] = str(readData[4].replace('t',''))
-                        #we store total time program
+                        #we store current time program
                         shared.DEV[address][6] = str(readData[5].replace('Tt',''))
+                        #we store the total time program
                         shared.DEV[address][7] = str(readData[6].replace('TT',''))
                         self.dataStr = str(readData[0])
                 
