@@ -19,6 +19,10 @@ import time
 import threading
 from datetime import timedelta
 
+from PyQt5.QtCore import Qt, pyqtSlot 
+from PyQt5.QtWidgets import *
+
+
 class Ui_MainWindow(object):
     hostname = 'raspberrypi.local'
 
@@ -247,6 +251,38 @@ class Ui_MainWindow(object):
         self.cmdDetenerActualizar.clicked.connect(self.on_cmdDetenerActualizar_clicked)
 
         self.cmdGroup.clicked.connect(self.on_cmdGroup_clicked)
+        
+        self.cmdDisplay1.setContextMenuPolicy(QtCore.Qt.ActionsContextMenu)
+        
+        start_action = QAction("Iniciar", self.cmdDisplay1)
+        pause_action = QAction("Pausar", self.cmdDisplay1)
+        stop_action = QAction("Detener", self.cmdDisplay1)
+
+        start_action.triggered.connect(self.__start)
+        pause_action.triggered.connect(self.__pause)
+        stop_action.triggered.connect(self.__stop)
+        
+        self.cmdDisplay1.addAction(start_action)
+        self.cmdDisplay1.addAction(pause_action)
+        self.cmdDisplay1.addAction(stop_action)
+
+    def __start(self):
+        print("Start")
+        temp = self.MainWindow.sender().parent().objectName()
+        temp2 = temp.replace("cmdDisplay", "")
+        print("Display "+temp2)
+
+    def __pause(self):
+        print("Pause")
+        temp = self.MainWindow.sender().objectName()
+        temp2 = temp.replace("cmdDisplay", "")
+        print("Display "+temp2)
+
+    def __stop(self):
+        print("Stop")
+        temp = self.MainWindow.sender().objectName()
+        temp2 = temp.replace("cmdDisplay", "")
+        print("Display "+temp2)
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
