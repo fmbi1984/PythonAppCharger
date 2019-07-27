@@ -32,6 +32,20 @@ class BCmb(object):
     timeout = 1
     attempts = 1
 
+    
+    @staticmethod
+    def writeProgramClient(hostname,addr,program_in_json):
+        result = ACTION.FAIL
+        result = devInterface.sendClientCommandAndGetResponse(hostname,addr, 0x57,program_in_json, 10)
+        print(result)
+        if result != None:
+            if result[1] == 'PASS':
+                result = ACTION.PASS
+            else:
+                result = ACTION.FAIL
+        return result  
+    
+    '''
     @staticmethod
     def writeProgramClient(hostname,addr, program_in_json):
         result = ACTION.FAIL
@@ -42,7 +56,8 @@ class BCmb(object):
                 result = ACTION.PASS
             else:
                 result = ACTION.FAIL
-        return result
+        return result  
+    '''
 
     @staticmethod
     def runClient(hostname,addr):
@@ -267,7 +282,7 @@ if __name__ == "__main__":
     #BCmb.pingClient('raspberrypi.local',2)
     #BCmb.runClient('raspberrypi.local', 1)
     #BCmb.pauseClient('raspberrypi.local', 1)
-    BCmb.stopClient('raspberrypi.local', 1)
+    #BCmb.stopClient('raspberrypi.local', 1)
     #BCmb.stopClient('raspberrypi.local', 2)
     #BCmb.readDataClient('raspberrypi.local',1)
     #BCmb.readStepClient('raspberrypi.local', 1)
