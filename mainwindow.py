@@ -7,32 +7,30 @@
 # WARNING! All changes made in this file will be lost!
 
 from PyQt5 import QtCore, QtGui, QtWidgets
+
+from PyQt5.QtCore import Qt, pyqtSlot 
 from PyQt5.QtCore import QTimer
-
+from PyQt5.QtWidgets import *
 from time import sleep
-
 from datalistener import DataListener
 from devicemainboard import BCmb
-
 import shared
 import time
 import threading
 from datetime import timedelta
 
-from PyQt5.QtCore import Qt, pyqtSlot 
-from PyQt5.QtWidgets import *
+import glob, os
 
 
 class Ui_MainWindow(object):
-    hostname = 'raspberrypi.local'
-
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(902, 553)
+        MainWindow.setBaseSize(QtCore.QSize(0, 0))
         self.centralWidget = QtWidgets.QWidget(MainWindow)
         self.centralWidget.setObjectName("centralWidget")
         self.tabWidget = QtWidgets.QTabWidget(self.centralWidget)
-        self.tabWidget.setGeometry(QtCore.QRect(20, 50, 871, 431))
+        self.tabWidget.setGeometry(QtCore.QRect(20, 60, 851, 421))
         self.tabWidget.setLayoutDirection(QtCore.Qt.LeftToRight)
         self.tabWidget.setTabShape(QtWidgets.QTabWidget.Rounded)
         self.tabWidget.setElideMode(QtCore.Qt.ElideRight)
@@ -40,66 +38,19 @@ class Ui_MainWindow(object):
         self.tabWidget.setObjectName("tabWidget")
         self.tab = QtWidgets.QWidget()
         self.tab.setObjectName("tab")
-        self.label = QtWidgets.QLabel(self.tab)
-        self.label.setGeometry(QtCore.QRect(50, 30, 141, 31))
-        font = QtGui.QFont()
-        font.setPointSize(40)
-        font.setBold(True)
-        font.setWeight(75)
-        self.label.setFont(font)
-        self.label.setObjectName("label")
-        self.label_4 = QtWidgets.QLabel(self.tab)
-        self.label_4.setGeometry(QtCore.QRect(470, 140, 141, 31))
+        self.cmdType2 = QtWidgets.QPushButton(self.tab)
+        self.cmdType2.setGeometry(QtCore.QRect(360, 220, 41, 32))
         font = QtGui.QFont()
         font.setPointSize(20)
         font.setBold(True)
         font.setWeight(75)
-        self.label_4.setFont(font)
-        self.label_4.setStyleSheet("QLabel { background-color : red; color : white; border: 1px solid black; }")
-        self.label_4.setAlignment(QtCore.Qt.AlignCenter)
-        self.label_4.setObjectName("label_4")
-        self.label_8 = QtWidgets.QLabel(self.tab)
-        self.label_8.setGeometry(QtCore.QRect(90, 90, 141, 31))
-        font = QtGui.QFont()
-        font.setPointSize(25)
-        font.setBold(True)
-        font.setWeight(75)
-        self.label_8.setFont(font)
-        self.label_8.setObjectName("label_8")
-        self.label_9 = QtWidgets.QLabel(self.tab)
-        self.label_9.setGeometry(QtCore.QRect(280, 90, 141, 31))
-        font = QtGui.QFont()
-        font.setPointSize(25)
-        font.setBold(True)
-        font.setWeight(75)
-        self.label_9.setFont(font)
-        self.label_9.setObjectName("label_9")
-        self.label_10 = QtWidgets.QLabel(self.tab)
-        self.label_10.setGeometry(QtCore.QRect(470, 100, 141, 31))
-        font = QtGui.QFont()
-        font.setPointSize(25)
-        font.setBold(True)
-        font.setWeight(75)
-        self.label_10.setFont(font)
-        self.label_10.setObjectName("label_10")
-        self.pbProgram1 = QtWidgets.QProgressBar(self.tab)
-        self.pbProgram1.setGeometry(QtCore.QRect(90, 170, 141, 31))
-        self.pbProgram1.setStyleSheet("QProgressBar\n"
-"{\n"
-"    border: 1px solid black;\n"
-"    border-radius: 0px;\n"
-"    text-align: center;\n"
-"}\n"
-"QProgressBar::chunk\n"
-"{\n"
-"    background-color: blue;\n"
-"    width: 2.15px;\n"
-"    margin: 0.5px;\n"
-"}")
-        self.pbProgram1.setProperty("value", 24)
-        self.pbProgram1.setObjectName("pbProgram1")
+        self.cmdType2.setFont(font)
+        self.cmdType2.setStyleSheet("QPushButton { background-color : yellow; color : black; border: 1px solid black; }")
+        self.cmdType2.setText("")
+        self.cmdType2.setFlat(True)
+        self.cmdType2.setObjectName("cmdType2")
         self.pbProgram2 = QtWidgets.QProgressBar(self.tab)
-        self.pbProgram2.setGeometry(QtCore.QRect(280, 170, 141, 31))
+        self.pbProgram2.setGeometry(QtCore.QRect(240, 190, 161, 31))
         self.pbProgram2.setStyleSheet("QProgressBar\n"
 "{\n"
 "    border: 1px solid black;\n"
@@ -112,11 +63,37 @@ class Ui_MainWindow(object):
 "    width: 2.15px;\n"
 "    margin: 0.5px;\n"
 "}")
-        self.pbProgram2.setProperty("value", 24)
+        self.pbProgram2.setProperty("value", 0)
         self.pbProgram2.setObjectName("pbProgram2")
-        self.progressBar_3 = QtWidgets.QProgressBar(self.tab)
-        self.progressBar_3.setGeometry(QtCore.QRect(470, 170, 141, 31))
-        self.progressBar_3.setStyleSheet("QProgressBar\n"
+        self.cmdDisplay1 = QtWidgets.QPushButton(self.tab)
+        self.cmdDisplay1.setGeometry(QtCore.QRect(50, 130, 161, 32))
+        font = QtGui.QFont()
+        font.setPointSize(20)
+        font.setBold(True)
+        font.setWeight(75)
+        self.cmdDisplay1.setFont(font)
+        self.cmdDisplay1.setStyleSheet("QPushButton { background-color : yellow; color : black; border: 1px solid black; }")
+        self.cmdDisplay1.setFlat(True)
+        self.cmdDisplay1.setObjectName("cmdDisplay1")
+        self.lblTab1 = QtWidgets.QLabel(self.tab)
+        self.lblTab1.setGeometry(QtCore.QRect(30, 20, 141, 31))
+        font = QtGui.QFont()
+        font.setPointSize(40)
+        font.setBold(True)
+        font.setWeight(75)
+        self.lblTab1.setFont(font)
+        self.lblTab1.setObjectName("lblTab1")
+        self.chk2 = QtWidgets.QCheckBox(self.tab)
+        self.chk2.setGeometry(QtCore.QRect(240, 110, 86, 20))
+        self.chk2.setText("")
+        self.chk2.setObjectName("chk2")
+        self.cbProgram2 = QtWidgets.QComboBox(self.tab)
+        self.cbProgram2.setGeometry(QtCore.QRect(240, 160, 161, 32))
+        self.cbProgram2.setStyleSheet("QComboBox { background-color : white; color : black; border: 1px solid black; }")
+        self.cbProgram2.setObjectName("cbProgram2")
+        self.pbProgram1 = QtWidgets.QProgressBar(self.tab)
+        self.pbProgram1.setGeometry(QtCore.QRect(50, 190, 161, 31))
+        self.pbProgram1.setStyleSheet("QProgressBar\n"
 "{\n"
 "    border: 1px solid black;\n"
 "    border-radius: 0px;\n"
@@ -128,30 +105,29 @@ class Ui_MainWindow(object):
 "    width: 2.15px;\n"
 "    margin: 0.5px;\n"
 "}")
-        self.progressBar_3.setProperty("value", 0)
-        self.progressBar_3.setObjectName("progressBar_3")
-        
-        self.cmdDisplay1 = QtWidgets.QPushButton(self.tab)
-        self.cmdDisplay1.setGeometry(QtCore.QRect(90, 140, 141, 32))
+        self.pbProgram1.setProperty("value", 0)
+        self.pbProgram1.setObjectName("pbProgram1")
+        self.chk1 = QtWidgets.QCheckBox(self.tab)
+        self.chk1.setGeometry(QtCore.QRect(50, 110, 86, 20))
+        self.chk1.setText("")
+        self.chk1.setObjectName("chk1")
+        self.cbProgram1 = QtWidgets.QComboBox(self.tab)
+        self.cbProgram1.setGeometry(QtCore.QRect(50, 160, 161, 32))
+        self.cbProgram1.setStyleSheet("QComboBox { background-color : white; color : black; border: 1px solid black; }")
+        self.cbProgram1.setObjectName("cbProgram1")
+        self.cmdStatus1 = QtWidgets.QPushButton(self.tab)
+        self.cmdStatus1.setGeometry(QtCore.QRect(50, 220, 121, 32))
         font = QtGui.QFont()
         font.setPointSize(20)
         font.setBold(True)
         font.setWeight(75)
-        self.cmdDisplay1.setFont(font)
-        self.cmdDisplay1.setStyleSheet("QPushButton { background-color : yellow; color : black; border: 1px solid black; }")
-        self.cmdDisplay1.setFlat(True)
-        self.cmdDisplay1.setObjectName("cmdDisplay1")
-        self.cmdIniciar1 = QtWidgets.QPushButton(self.tab)
-        self.cmdIniciar1.setGeometry(QtCore.QRect(750, 290, 91, 32))
-        self.cmdIniciar1.setObjectName("cmdIniciar1")
-        self.cmdPausar1 = QtWidgets.QPushButton(self.tab)
-        self.cmdPausar1.setGeometry(QtCore.QRect(750, 320, 91, 32))
-        self.cmdPausar1.setObjectName("cmdPausar1")
-        self.cmdDetener1 = QtWidgets.QPushButton(self.tab)
-        self.cmdDetener1.setGeometry(QtCore.QRect(750, 350, 91, 32))
-        self.cmdDetener1.setObjectName("cmdDetener1")
+        self.cmdStatus1.setFont(font)
+        self.cmdStatus1.setStyleSheet("QPushButton { background-color : yellow; color : black; border: 1px solid black; }")
+        self.cmdStatus1.setText("")
+        self.cmdStatus1.setFlat(True)
+        self.cmdStatus1.setObjectName("cmdStatus1")
         self.cmdDisplay2 = QtWidgets.QPushButton(self.tab)
-        self.cmdDisplay2.setGeometry(QtCore.QRect(280, 140, 141, 32))
+        self.cmdDisplay2.setGeometry(QtCore.QRect(240, 130, 161, 32))
         font = QtGui.QFont()
         font.setPointSize(20)
         font.setBold(True)
@@ -160,74 +136,77 @@ class Ui_MainWindow(object):
         self.cmdDisplay2.setStyleSheet("QPushButton { background-color : yellow; color : black; border: 1px solid black; }")
         self.cmdDisplay2.setFlat(True)
         self.cmdDisplay2.setObjectName("cmdDisplay2")
-        self.txtProgram = QtWidgets.QTextEdit(self.tab)
-        self.txtProgram.setGeometry(QtCore.QRect(210, 360, 341, 21))
-        self.txtProgram.setObjectName("txtProgram")
-        self.cmdProgram1 = QtWidgets.QPushButton(self.tab)
-        self.cmdProgram1.setGeometry(QtCore.QRect(560, 350, 141, 32))
-        self.cmdProgram1.setObjectName("cmdProgram1")
-        self.check1 = QtWidgets.QCheckBox(self.tab)
-        self.check1.setGeometry(QtCore.QRect(70, 120, 86, 20))
-        self.check1.setText("")
-        self.check1.setObjectName("check1")
-        self.check2 = QtWidgets.QCheckBox(self.tab)
-        self.check2.setGeometry(QtCore.QRect(260, 120, 86, 20))
-        self.check2.setText("")
-        self.check2.setObjectName("check2")
-        self.cmdGroup = QtWidgets.QPushButton(self.tab)
-        self.cmdGroup.setGeometry(QtCore.QRect(750, 260, 91, 32))
-        self.cmdGroup.setObjectName("cmdGroup")
+        self.lblDevice1 = QtWidgets.QLabel(self.tab)
+        self.lblDevice1.setGeometry(QtCore.QRect(70, 80, 141, 31))
+        font = QtGui.QFont()
+        font.setPointSize(25)
+        font.setBold(True)
+        font.setWeight(75)
+        self.lblDevice1.setFont(font)
+        self.lblDevice1.setObjectName("lblDevice1")
+        self.lblDevice2 = QtWidgets.QLabel(self.tab)
+        self.lblDevice2.setGeometry(QtCore.QRect(260, 80, 141, 31))
+        font = QtGui.QFont()
+        font.setPointSize(25)
+        font.setBold(True)
+        font.setWeight(75)
+        self.lblDevice2.setFont(font)
+        self.lblDevice2.setObjectName("lblDevice2")
+        self.cmdStatus2 = QtWidgets.QPushButton(self.tab)
+        self.cmdStatus2.setGeometry(QtCore.QRect(240, 220, 121, 32))
+        font = QtGui.QFont()
+        font.setPointSize(20)
+        font.setBold(True)
+        font.setWeight(75)
+        self.cmdStatus2.setFont(font)
+        self.cmdStatus2.setStyleSheet("QPushButton { background-color : yellow; color : black; border: 1px solid black; }")
+        self.cmdStatus2.setText("")
+        self.cmdStatus2.setFlat(True)
+        self.cmdStatus2.setObjectName("cmdStatus2")
+        self.cmdType1 = QtWidgets.QPushButton(self.tab)
+        self.cmdType1.setGeometry(QtCore.QRect(170, 220, 41, 32))
+        font = QtGui.QFont()
+        font.setPointSize(20)
+        font.setBold(True)
+        font.setWeight(75)
+        self.cmdType1.setFont(font)
+        self.cmdType1.setStyleSheet("QPushButton { background-color : yellow; color : black; border: 1px solid black; }")
+        self.cmdType1.setText("")
+        self.cmdType1.setFlat(True)
+        self.cmdType1.setObjectName("cmdType1")
         self.tabWidget.addTab(self.tab, "")
         self.tab_2 = QtWidgets.QWidget()
         self.tab_2.setObjectName("tab_2")
         self.tabWidget.addTab(self.tab_2, "")
-        self.cmdIniciarActualizar = QtWidgets.QPushButton(self.centralWidget)
-        self.cmdIniciarActualizar.setGeometry(QtCore.QRect(600, 10, 141, 32))
-        self.cmdIniciarActualizar.setObjectName("cmdIniciarActualizar")
-        self.cmdDetenerActualizar = QtWidgets.QPushButton(self.centralWidget)
-        self.cmdDetenerActualizar.setGeometry(QtCore.QRect(750, 10, 141, 32))
-        self.cmdDetenerActualizar.setObjectName("cmdDetenerActualizar")
+        self.cmdSelect = QtWidgets.QPushButton(self.centralWidget)
+        self.cmdSelect.setGeometry(QtCore.QRect(10, 10, 171, 41))
+        self.cmdSelect.setObjectName("cmdSelect")
+        self.cmdStart = QtWidgets.QPushButton(self.centralWidget)
+        self.cmdStart.setGeometry(QtCore.QRect(180, 10, 171, 41))
+        self.cmdStart.setObjectName("cmdStart")
+        self.cmdStop = QtWidgets.QPushButton(self.centralWidget)
+        self.cmdStop.setGeometry(QtCore.QRect(520, 10, 171, 41))
+        self.cmdStop.setObjectName("cmdStop")
+        self.cmdPause = QtWidgets.QPushButton(self.centralWidget)
+        self.cmdPause.setGeometry(QtCore.QRect(350, 10, 171, 41))
+        self.cmdPause.setObjectName("cmdPause")
+        self.cmdUpdate = QtWidgets.QPushButton(self.centralWidget)
+        self.cmdUpdate.setGeometry(QtCore.QRect(690, 10, 171, 41))
+        self.cmdUpdate.setObjectName("cmdUpdate")
         MainWindow.setCentralWidget(self.centralWidget)
+        self.statusBar = QtWidgets.QStatusBar(MainWindow)
+        self.statusBar.setObjectName("statusBar")
+        MainWindow.setStatusBar(self.statusBar)
         self.menuBar = QtWidgets.QMenuBar(MainWindow)
         self.menuBar.setGeometry(QtCore.QRect(0, 0, 902, 22))
         self.menuBar.setObjectName("menuBar")
         self.menuArchivo = QtWidgets.QMenu(self.menuBar)
         self.menuArchivo.setObjectName("menuArchivo")
-        self.menuVista = QtWidgets.QMenu(self.menuBar)
-        self.menuVista.setObjectName("menuVista")
-        self.menuCircuito = QtWidgets.QMenu(self.menuBar)
-        self.menuCircuito.setObjectName("menuCircuito")
-        self.menuHerramientas = QtWidgets.QMenu(self.menuBar)
-        self.menuHerramientas.setObjectName("menuHerramientas")
-        self.menuReportes = QtWidgets.QMenu(self.menuBar)
-        self.menuReportes.setObjectName("menuReportes")
         MainWindow.setMenuBar(self.menuBar)
-        self.mainToolBar = QtWidgets.QToolBar(MainWindow)
-        self.mainToolBar.setObjectName("mainToolBar")
-        MainWindow.addToolBar(QtCore.Qt.TopToolBarArea, self.mainToolBar)
-        self.statusBar = QtWidgets.QStatusBar(MainWindow)
-        self.statusBar.setObjectName("statusBar")
-        MainWindow.setStatusBar(self.statusBar)
-        self.actionhh = QtWidgets.QAction(MainWindow)
-        self.actionhh.setObjectName("actionhh")
-        self.actionjjl = QtWidgets.QAction(MainWindow)
-        self.actionjjl.setObjectName("actionjjl")
-        self.actionhh_2 = QtWidgets.QAction(MainWindow)
-        self.actionhh_2.setObjectName("actionhh_2")
-        self.actionjjk = QtWidgets.QAction(MainWindow)
-        self.actionjjk.setObjectName("actionjjk")
-        self.actionjkjkj = QtWidgets.QAction(MainWindow)
-        self.actionjkjkj.setObjectName("actionjkjkj")
-        self.menuArchivo.addAction(self.actionhh)
-        self.menuVista.addAction(self.actionjjl)
-        self.menuCircuito.addAction(self.actionhh_2)
-        self.menuHerramientas.addAction(self.actionjjk)
-        self.menuReportes.addAction(self.actionjkjkj)
+        self.exit = QtWidgets.QAction(MainWindow)
+        self.exit.setObjectName("exit")
+        self.menuArchivo.addAction(self.exit)
         self.menuBar.addAction(self.menuArchivo.menuAction())
-        self.menuBar.addAction(self.menuVista.menuAction())
-        self.menuBar.addAction(self.menuCircuito.menuAction())
-        self.menuBar.addAction(self.menuHerramientas.menuAction())
-        self.menuBar.addAction(self.menuReportes.menuAction())
 
         self.retranslateUi(MainWindow)
         self.tabWidget.setCurrentIndex(0)
@@ -238,62 +217,65 @@ class Ui_MainWindow(object):
         MainWindow.showEvent = self.showEvent
         MainWindow.closeEvent = self.closeEvent
 
-        self.cmdIniciar1.clicked.connect(self.on_cmdIniciar1_clicked)
+        self.cmdStart.clicked.connect(self.on_cmdStart_clicked)
 
-        self.cmdPausar1.clicked.connect(self.on_cmdPausar1_clicked)
+        self.cmdPause.clicked.connect(self.on_cmdPause_clicked)
 
-        self.cmdDetener1.clicked.connect(self.on_cmdDetener1_clicked)
+        self.cmdStop.clicked.connect(self.on_cmdStop_clicked)
 
         self.cmdDisplay1.clicked.connect(self.on_cmdDisplay_clicked)
         self.cmdDisplay2.clicked.connect(self.on_cmdDisplay_clicked)
 
-        self.cmdIniciarActualizar.clicked.connect(self.on_cmdIniciarActualizar_clicked)
-        self.cmdDetenerActualizar.clicked.connect(self.on_cmdDetenerActualizar_clicked)
+        #self.cmdUpdate.clicked.connect(self.on_cmdUpdate_clicked)
+        #self.cmdDetenerActualizar.clicked.connect(self.on_cmdDetenerActualizar_clicked)
 
-        self.cmdGroup.clicked.connect(self.on_cmdGroup_clicked)
+        self.cmdSelect.clicked.connect(self.on_cmdGroup_clicked)
         
         self.cmdDisplay1.setContextMenuPolicy(QtCore.Qt.ActionsContextMenu)
+        self.cmdDisplay2.setContextMenuPolicy(QtCore.Qt.ActionsContextMenu)
         
-        start_action = QAction("Iniciar", self.cmdDisplay1)
-        pause_action = QAction("Pausar", self.cmdDisplay1)
-        stop_action = QAction("Detener", self.cmdDisplay1)
+        start_action1 = QAction("Iniciar", self.cmdDisplay1)
+        pause_action1 = QAction("Pausar", self.cmdDisplay1)
+        stop_action1 = QAction("Detener", self.cmdDisplay1)
 
-        start_action.triggered.connect(self.__start)
-        pause_action.triggered.connect(self.__pause)
-        stop_action.triggered.connect(self.__stop)
+        start_action2 = QAction("Iniciar", self.cmdDisplay2)
+        pause_action2 = QAction("Pausar", self.cmdDisplay2)
+        stop_action2 = QAction("Detener", self.cmdDisplay2)
+
+        start_action1.triggered.connect(self.__start)
+        pause_action1.triggered.connect(self.__pause)
+        stop_action1.triggered.connect(self.__stop)
+
+        start_action2.triggered.connect(self.__start)
+        pause_action2.triggered.connect(self.__pause)
+        stop_action2.triggered.connect(self.__stop)
         
-        self.cmdDisplay1.addAction(start_action)
-        self.cmdDisplay1.addAction(pause_action)
-        self.cmdDisplay1.addAction(stop_action)
+        self.cmdDisplay1.addAction(start_action1)
+        self.cmdDisplay1.addAction(pause_action1)
+        self.cmdDisplay1.addAction(stop_action1)
 
-    def __start(self):
-        print("Start")
-        temp = self.MainWindow.sender().parent().objectName()
-        temp2 = temp.replace("cmdDisplay", "")
-        print("Display "+temp2)
-
-    def __pause(self):
-        print("Pause")
-        temp = self.MainWindow.sender().objectName()
-        temp2 = temp.replace("cmdDisplay", "")
-        print("Display "+temp2)
-
-    def __stop(self):
-        print("Stop")
-        temp = self.MainWindow.sender().objectName()
-        temp2 = temp.replace("cmdDisplay", "")
-        print("Display "+temp2)
+        self.cmdDisplay2.addAction(start_action2)
+        self.cmdDisplay2.addAction(pause_action2)
+        self.cmdDisplay2.addAction(stop_action2)
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "Pantalla de Formación"))
-        self.label.setText(_translate("MainWindow", "Mesa 1"))
-        self.label_4.setToolTip(_translate("MainWindow", "Thisis a tooltip"))
-        self.label_4.setText(_translate("MainWindow", "Falla"))
-        self.label_8.setText(_translate("MainWindow", "MF1"))
-        self.label_9.setText(_translate("MainWindow", "MF2"))
-        self.label_10.setText(_translate("MainWindow", "MF3"))
-        self.pbProgram1.setToolTip(_translate("MainWindow", "Nombre: MF1\n"
+        self.cmdType2.setToolTip(_translate("MainWindow", "Nombre: MF1\n"
+"Estado: No Conectado\n"
+"Corriente: 25.0\n"
+"Voltaje: 58.0\n"
+"Temperatura: 24.8\n"
+"AH: 0.0\n"
+"Nombre de Programa: 001-SGL\n"
+"Indice del Programa: 501\n"
+"Paso del Programa: 1\n"
+"Step time: 00:01\n"
+"Tiempo Restante: 00:00\n"
+"Tiempo Finalizado: 12/04/2019 20:13\n"
+"ServerID: 0\n"
+"FirstN: 0"))
+        self.pbProgram2.setToolTip(_translate("MainWindow", "Nombre: MF1\n"
 "Estado: No Conectado\n"
 "Corriente: 25.0\n"
 "Voltaje: 58.0\n"
@@ -321,10 +303,36 @@ class Ui_MainWindow(object):
 "Tiempo Finalizado: 12/04/2019 20:13\n"
 "ServerID: 0\n"
 "FirstN: 0"))
-        self.cmdDisplay1.setText(_translate("MainWindow", "Voltage: 12.6V"))
-        self.cmdIniciar1.setText(_translate("MainWindow", "Iniciar"))
-        self.cmdPausar1.setText(_translate("MainWindow", "Pausar"))
-        self.cmdDetener1.setText(_translate("MainWindow", "Detener"))
+        self.cmdDisplay1.setText(_translate("MainWindow", "0.0 V"))
+        self.lblTab1.setText(_translate("MainWindow", "Mesa 1"))
+        self.pbProgram1.setToolTip(_translate("MainWindow", "Nombre: MF1\n"
+"Estado: No Conectado\n"
+"Corriente: 25.0\n"
+"Voltaje: 58.0\n"
+"Temperatura: 24.8\n"
+"AH: 0.0\n"
+"Nombre de Programa: 001-SGL\n"
+"Indice del Programa: 501\n"
+"Paso del Programa: 1\n"
+"Step time: 00:01\n"
+"Tiempo Restante: 00:00\n"
+"Tiempo Finalizado: 12/04/2019 20:13\n"
+"ServerID: 0\n"
+"FirstN: 0"))
+        self.cmdStatus1.setToolTip(_translate("MainWindow", "Nombre: MF1\n"
+"Estado: No Conectado\n"
+"Corriente: 25.0\n"
+"Voltaje: 58.0\n"
+"Temperatura: 24.8\n"
+"AH: 0.0\n"
+"Nombre de Programa: 001-SGL\n"
+"Indice del Programa: 501\n"
+"Paso del Programa: 1\n"
+"Step time: 00:01\n"
+"Tiempo Restante: 00:00\n"
+"Tiempo Finalizado: 12/04/2019 20:13\n"
+"ServerID: 0\n"
+"FirstN: 0"))
         self.cmdDisplay2.setToolTip(_translate("MainWindow", "Nombre: MF1\n"
 "Estado: No Conectado\n"
 "Corriente: 25.0\n"
@@ -339,23 +347,49 @@ class Ui_MainWindow(object):
 "Tiempo Finalizado: 12/04/2019 20:13\n"
 "ServerID: 0\n"
 "FirstN: 0"))
-        self.cmdDisplay2.setText(_translate("MainWindow", "Apagar"))
-        self.cmdProgram1.setText(_translate("MainWindow", "Cargar Programa"))
-        self.cmdGroup.setText(_translate("MainWindow", "Selecionar"))
+        self.cmdDisplay2.setText(_translate("MainWindow", "0.0 V"))
+        self.lblDevice1.setText(_translate("MainWindow", "MF1"))
+        self.lblDevice2.setText(_translate("MainWindow", "MF2"))
+        self.cmdStatus2.setToolTip(_translate("MainWindow", "Nombre: MF1\n"
+"Estado: No Conectado\n"
+"Corriente: 25.0\n"
+"Voltaje: 58.0\n"
+"Temperatura: 24.8\n"
+"AH: 0.0\n"
+"Nombre de Programa: 001-SGL\n"
+"Indice del Programa: 501\n"
+"Paso del Programa: 1\n"
+"Step time: 00:01\n"
+"Tiempo Restante: 00:00\n"
+"Tiempo Finalizado: 12/04/2019 20:13\n"
+"ServerID: 0\n"
+"FirstN: 0"))
+        self.cmdType1.setToolTip(_translate("MainWindow", "Nombre: MF1\n"
+"Estado: No Conectado\n"
+"Corriente: 25.0\n"
+"Voltaje: 58.0\n"
+"Temperatura: 24.8\n"
+"AH: 0.0\n"
+"Nombre de Programa: 001-SGL\n"
+"Indice del Programa: 501\n"
+"Paso del Programa: 1\n"
+"Step time: 00:01\n"
+"Tiempo Restante: 00:00\n"
+"Tiempo Finalizado: 12/04/2019 20:13\n"
+"ServerID: 0\n"
+"FirstN: 0"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), _translate("MainWindow", "Mesa 1"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), _translate("MainWindow", "Mesa 2"))
-        self.cmdIniciarActualizar.setText(_translate("MainWindow", "Iniciar Actualizar"))
-        self.cmdDetenerActualizar.setText(_translate("MainWindow", "Detener Actualizar"))
+        self.cmdSelect.setText(_translate("MainWindow", "Seleccionar"))
+        self.cmdStart.setText(_translate("MainWindow", "Iniciar"))
+        self.cmdStop.setText(_translate("MainWindow", "Stop"))
+        self.cmdPause.setText(_translate("MainWindow", "Pausar"))
+        self.cmdUpdate.setText(_translate("MainWindow", "Forzar Actualizar"))
         self.menuArchivo.setTitle(_translate("MainWindow", "Archivo"))
-        self.menuVista.setTitle(_translate("MainWindow", "Vista"))
-        self.menuCircuito.setTitle(_translate("MainWindow", "Circuito"))
-        self.menuHerramientas.setTitle(_translate("MainWindow", "Herramientas"))
-        self.menuReportes.setTitle(_translate("MainWindow", "Reportes"))
-        self.actionhh.setText(_translate("MainWindow", "hh"))
-        self.actionjjl.setText(_translate("MainWindow", "jjl"))
-        self.actionhh_2.setText(_translate("MainWindow", "hh"))
-        self.actionjjk.setText(_translate("MainWindow", "jjk"))
-        self.actionjkjkj.setText(_translate("MainWindow", "jkjkj"))
+        self.exit.setText(_translate("MainWindow", "Salir"))
+
+
+    hostname = 'raspberrypi.local'
 
     def display(self):
         print(time.ctime())
@@ -388,89 +422,109 @@ class Ui_MainWindow(object):
                 cmdDisplay.update()
                 cmdDisplay.setUpdatesEnabled(True)
 
-                
                 pbObj.repaint()
                 pbObj.update()
                 pbObj.setUpdatesEnabled(True)
-            else:
-                print("ERROR PING")
-                
-            
+            #else:
+            #    print("ERROR PING")
 
-    
     def tick(self):
-        print("tick")
+        #print("tick")
         #we update here our controls
         self.display()
 
+    def callback(self):
+        print("display")
 
     def showEvent(self, event):
         print("show")
-        
         self.timer = QTimer()
         self.timer.timeout.connect(self.tick)
         self.timer.setInterval(1000)
         self.timer.start() 
-        
         #self.display()
-
         #self.unitializeCheckbox()
-
+        self.updateThread = DataListener(self.callback)
+        self.updateThread.start()
+        self.fillProgramComboBoxes()
+        
 
     def closeEvent(self, event):
         print("close")
-        #self.WAIT_ACTIVE = 0
+        self.updateThread.stop()
+
+    def fillProgramComboBoxes(self):
+        oldpwd=os.getcwd()
+        os.chdir("FormationDataFiles")
+        fileList = []
+        for fileName in glob.glob("*.json"):
+            fileList.append(fileName)
+            #print(fileName)
+        fileList.sort()
+        print(fileList)
+        os.chdir(oldpwd)
+
+        for elem in fileList:
+            self.cbProgram1.addItem(str(elem))
+            self.cbProgram2.addItem(str(elem))
+
 
     def unitializeCheckbox(self):
-        self.check1.setVisible(False)
-        self.check1.setCheckState(QtCore.Qt.Unchecked)
+        self.chk1.setVisible(False)
+        self.chk1.setCheckState(QtCore.Qt.Unchecked)
 
-        self.check2.setVisible(False)
-        self.check2.setCheckState(QtCore.Qt.Unchecked)
+        self.chk2.setVisible(False)
+        self.chk2.setCheckState(QtCore.Qt.Unchecked)
 
     def initializeCheckbox(self):
-        self.check1.setVisible(True)
-        self.check1.setCheckState(QtCore.Qt.Unchecked)
+        self.chk1.setVisible(True)
+        self.chk1.setCheckState(QtCore.Qt.Unchecked)
 
-        self.check2.setVisible(True)
-        self.check2.setCheckState(QtCore.Qt.Unchecked)
-
+        self.chk2.setVisible(True)
+        self.chk2.setCheckState(QtCore.Qt.Unchecked)
 
     def on_cmdGroup_clicked(self):  
         self.initializeCheckbox()
     
-  
+    def remove_char(self, input_string, index):
+        first_part = input_string[:index]
+        second_part = input_string[index+1:]
+        return first_part + second_part
 
-    def on_cmdIniciar1_clicked(self):
-        
-        if self.check1.isChecked:
+    def prepare_toSend(self, dataOrig):
+        #print(dataOrig)
+        data2 = str(dataOrig).replace("{\"steps\": ", '')
+        #print(data2)
+        value_index = len(data2)-1
+        data3 = self.remove_char(data2, value_index)
+        #print(data3)
+        return data3
+
+    def on_cmdStart_clicked(self):
+        if self.chk1.isChecked:
             print("Iniciar 1")
             BCmb.runClient(self.hostname, 1)
-        if self.check2.isChecked:
+        if self.chk2.isChecked:
             print("Iniciar 2")
             BCmb.runClient(self.hostname, 2)
-
         self.unitializeCheckbox()
     
-
-    def on_cmdPausar1_clicked(self):
-        
-        if self.check1.isChecked:
+    def on_cmdPause_clicked(self):
+        if self.chk1.isChecked:
             print("Pausar 1")
             BCmb.pauseClient(self.hostname, 1)
-        if self.check2.isChecked:
+        if self.chk2.isChecked:
             print("Pausar 2")
             BCmb.pauseClient(self.hostname, 2)
-
         self.unitializeCheckbox()
     
 
-    def on_cmdDetener1_clicked(self):
+    def on_cmdStop_clicked(self):
         
-        if self.check1.isChecked:
+        if self.chk1.isChecked:
             print("Detener 1")
             BCmb.stopClient(self.hostname, 1)
-        if self.check2.isChecked:
+        if self.chk2.isChecked:
             print("Detener 2")
             BCmb.stopClient(self.hostname, 2)
 
@@ -487,56 +541,53 @@ class Ui_MainWindow(object):
             shared.DEV[nDev][9] = 1
         print(shared.DEV[nDev][9])
 
-    def testsCallback(self, msg):
+    def __start(self):
+        print("Start")
+        senderName = self.MainWindow.sender().parent().objectName()
+        nStrDevice = senderName.replace("cmdDisplay", "")
+        print("Display "+nStrDevice)
+        self.updateThread.stop()
+        sleep(.5)
+        cbxPgr = getattr(self, "cbProgram"+nStrDevice)
+        programName = cbxPgr.currentText()
 
-        address = 1
-        if "DL["+str(address)+"]" in msg:
-            msg = msg.replace("DL["+str(address)+"]:","")
+        f= open("FormationDataFiles/"+programName,"r")
+        contents = f.read()
+        f.close()
 
-            
+        program = self.prepare_toSend(contents)
 
-        '''
+        BCmb.writeProgramClient(self.hostname,int(nStrDevice), program)
+        
+        sleep(3)
+        BCmb.runClient(self.hostname, int(nStrDevice))
+        sleep(.5)
+        self.updateThread = DataListener(self.callback)
+        self.updateThread.start()
 
-            newstr = msg
-            print (newstr)
+    def __pause(self):
+        print("Pause")
+        senderName = self.MainWindow.sender().parent().objectName()
+        nStrDevice = senderName.replace("cmdDisplay", "")
+        print("Display "+nStrDevice)
+        self.updateThread.stop()
+        sleep(.5)
+        BCmb.pauseClient(self.hostname, int(nStrDevice))
+        sleep(.5)
+        self.updateThread = DataListener(self.callback)
+        self.updateThread.start()
 
-
-            self.cmdDisplay1.setText(str(newstr))
-            self.cmdDisplay1.repaint()
-            self.cmdDisplay1.update()
-            self.cmdDisplay1.setUpdatesEnabled(True)
-        '''
-
-    def on_cmdIniciarActualizar_clicked(self):
-        print("Iniciar Actualizar")
-        self.dataThread = DataListener(self.testsCallback)
-        self.dataThread.start()
-
-    def on_cmdDetenerActualizar_clicked(self):
-        print("Detener Actualizar")
-        self.dataThread.stop()
-
-
-    def pingForDevicesPresent(self):
-        # we do ping to the devices 
-        devStart = 1
-        devStop = 2
-        for i in range(devStart, devStop+1):
-            address=i
-            print("Doing ping to device No."+str(address))
-            readData = BCmb.pingClient(self.hostname, address)
-            print("VALUE:")
-            print(str(readData))
-            shared.DEV[i][0] = False
-            if readData!= None:
-                if readData == True:
-                    shared.DEV[i][0] = True
-                    print("DEV"+str(address)+" is Present!")  
-                else:
-                    print("DEV"+str(address)+" is not Present!")
-            else:
-                print("DEV"+str(address)+" is not Present!")
-
+    def __stop(self):
+        print("Stop")
+        senderName = self.MainWindow.sender().parent().objectName()
+        nStrDevice = senderName.replace("cmdDisplay", "")
+        print("Display "+nStrDevice)
+        self.updateThread.stop()
+        sleep(.5)
+        BCmb.stopClient(self.hostname, int(nStrDevice))
+        sleep(.5)
+        self.updateThread = DataListener(self.callback)
+        self.updateThread.start()
 
 if __name__ == "__main__":
     import sys
