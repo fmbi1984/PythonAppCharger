@@ -1,6 +1,8 @@
 import socket
 import sys
 from _thread import start_new_thread
+import threading
+lock2 = threading.Lock()
 
 import USBUtils
 import SerialPortUtil
@@ -82,10 +84,13 @@ def client_thread(conn):
                 t_out = 10
             else:
                 t_out = 1
-            
-            sct = SerialCommThread(None, sp, appsettings.FTDI_baudRate, p_data, b'\x04',t_out,5)
-            sct.start()
-            sct.join()
+            lock2.acquire()
+            try:
+                sct = SerialCommThread(None, sp, appsettings.FTDI_baudRate, p_data, b'\x04',t_out,5)
+                sct.start()
+                sct.join()
+            finally:
+                lock2.release()
             #print("serial thread stopped")
             #if sct.stopped() == False:
             #    e="serial thread not stopped"
