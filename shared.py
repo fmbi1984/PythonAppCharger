@@ -13,15 +13,15 @@ LOW = 0
 HIGH = 1
 
 lock = threading.Lock() # lock will be used as a lock for the UART
+ljLock = threading.Lock() # lock will be used as a lock for the labjack
 
 devStart = 1
-devStop = 1
+devStop = 2
 
 DEV = [
-    [False, 0, 0, 0, '', 0, 0, 0, 'I', 1, 'default.json'],
-    [False, 0, 0, 0, '', 0, 0, 0, 'I', 1, 'default.json'],
-    [False, 0, 0, 0, '', 0, 0, 0, 'I', 1, 'default.json'],
-    [False, 0, 0, 0, '', 0, 0, 0, 'I', 1, 'default.json']
+    [False, '', '', '', '', '', '', '', ''],
+    [False, '', '', '', '', '', '', '', ''],
+    [False, '', '', '', '', '', '', '', '']
 ]
 
 
