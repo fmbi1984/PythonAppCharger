@@ -79,7 +79,15 @@ def client_thread(conn):
             #print(p_data[2])
             print(p_data)
             op_code = 0x57
+            op_file = 0x36
+            cl_file = 0x37
             t_out = 10
+            
+            if p_data[2] == op_file:
+                print("open")
+            elif p_data[2]==cl_file:
+                print("close")    
+
             if p_data[2] ==op_code:
                 t_out = 10
             else:
