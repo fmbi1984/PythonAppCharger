@@ -246,7 +246,7 @@ class BCmb(object):
 
     @staticmethod
     def pingClient(hostname,addr):
-        result = ACTION.FAIL 
+        result = ACTION.FAIL
         result = devInterface.sendClientCommandAndGetResponse(hostname,addr,0x64, "", BCmb.timeout)
         print(result)
         if result != None:
@@ -271,7 +271,7 @@ class BCmb(object):
 
     @staticmethod
     def openFileClient(hostname,addr):
-        result = ACTION.FAIL 
+        result = ACTION.FAIL
         result = devInterface.sendClientCommandAndGetResponse(hostname,addr,0x36, "", BCmb.timeout)
         print(result)
         if result != None:
@@ -279,11 +279,11 @@ class BCmb(object):
                 result = True
             else:
                 result = False
-        return result  
+        return result
 
     @staticmethod
     def closeFileClient(hostname,addr):
-        result = ACTION.FAIL 
+        result = ACTION.FAIL
         result = devInterface.sendClientCommandAndGetResponse(hostname,addr,0x37, "", BCmb.timeout)
         print(result)
         if result != None:
@@ -291,12 +291,26 @@ class BCmb(object):
                 result = True
             else:
                 result = False
-        return result   
+        return result
+
+    @staticmethod
+    def memoryDataClient(hostname,addr):
+        result = ACTION.FAIL
+        result = devInterface.sendClientCommandAndGetResponse(hostname,addr,0x38, "", BCmb.timeout)
+        print(result)
+        if result != None:
+            if result[1] == 'PASS':
+                result = True
+            else:
+                result = False
+        return result
 
 
 if __name__ == "__main__":
     print("tests")
     #BCmb.readData(1)
+    #BCmb.pingClient('raspberrypi.local',1)
+    #BCmb.ping(2)
     #BCmb.writeProgram(0, "[{\"Type\":\"Begin\"},{\"Type\":\"Pause\",\"Time\":\"10000\"},{\"Type\":\"Charge\",\"Time\":\"120000\",\"Current\":\"8.0\"},{\"Type\":\"Charge\",\"Time\":\"50000\",\"Current\":\"12.0\"},{\"Type\":\"Carga\",\"Time\":\"60000\",\"Current\":\"15.0\"},{\"Type\":\"Charge\",\"Time\":\"40000\",\"Current\":\"20.0\"},{\"Type\":\"Pause\",\"Time\":\"20000\"},{\"Type\":\"Charge\",\"Time\":\"30000\",\"Current\":\"10.5\"},{\"Type\":\"Charge\",\"Time\":\"40000\",\"Current\":\"14.5\"},{\"Type\":\"End\"}]")
     #BCmb.readProgram(0)
     #BCmb.setAddress(1)
@@ -315,10 +329,23 @@ if __name__ == "__main__":
     BCmb.readProgram(2)
     BCmb.run(2)
     '''
+    
+    '''
+    BCmb.openFileClient('raspberrypi.local',1)
+    sleep(0.1)
 
-    BCmb.openFileClient('raspberrypi.local',2)
-    #BCmb.closeFileClient('raspberrypi.local',2)
-    #BCmb.pingClient('raspberrypi.local',2)
+    for i in range(0,30):
+        BCmb.memoryDataClient('raspberrypi.local', 1)
+
+    
+    BCmb.closeFileClient('raspberrypi.local',1)
+
+    
+
+    #BCmb.memoryDataClient('raspberrypi.local', 1)
+    '''
+
+    BCmb.pingClient('raspberrypi.local',2)
     #BCmb.runClient('raspberrypi.local', 1)
     #BCmb.pauseClient('raspberrypi.local', 1)
     #BCmb.stopClient('raspberrypi.local', 1)
@@ -335,7 +362,8 @@ if __name__ == "__main__":
     '''
     while True:
         #BCmb.readData(1)
-        BCmb.readDataClient('raspberrypi.local', 1)
+        BCmb.memoryDataClient('raspberrypi.local', 1)
+        #BCmb.readDataClient('raspberrypi.local', 1)
         #BCmb.readDataClient('raspberrypi.local', 2)
         #BCmb.readStepClient('raspberrypi.local', 2)
         sleep(.1)

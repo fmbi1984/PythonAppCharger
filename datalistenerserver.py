@@ -10,8 +10,10 @@ import shared
 import appsettings
 
 from devicemainboard import BCmb
+from report import IndividualReport
 
 logger = logging.getLogger(__name__)
+
 
 class ACTION(Enum):
     PASS = 0
@@ -23,7 +25,7 @@ class DataListenerServer(Thread):
     mySrc = None
 
     _stop_event = None
-
+    
 
     def __init__(self, args):
         '''Constructor'''
@@ -44,7 +46,12 @@ class DataListenerServer(Thread):
         print(self._name+" started")
         
         self.pingForDevicesPresent()
-
+        
+        for i in range(1,2+1):
+            add = str(i)
+            ireport = IndividualReport(add)
+            ireport.begin()
+        
         
         while not self._stop_event.is_set():
             
@@ -52,6 +59,10 @@ class DataListenerServer(Thread):
     
             for i in range(1,2+1):
                 address=i
+                add = str(address)
+                    
+                ireport = IndividualReport(add)
+                #ireport.begin()
                 print(address)
 
                 if shared.DEV[address][0] == True:
@@ -59,9 +70,9 @@ class DataListenerServer(Thread):
                     readData = BCmb.readData(address)
                     print("VALUE:")
                     print(readData)
+
                     readData = readData.split(",")
                     print(readData)
-                    
                     
                     if readData!= None:
                         #we store current
@@ -90,6 +101,13 @@ class DataListenerServer(Thread):
                         print(shared.DEV[address][6])
                         print(shared.DEV[address][7])
                         print(shared.DEV[address][8])
+                        
+                        #for i in range (1,9):
+                        ireport.appendWithTimeStamp(","+ shared.DEV[address][1] + "," + shared.DEV[address][2] + "," +\
+                                                         shared.DEV[address][3] + "," + shared.DEV[address][4] + "," +\
+                                                         shared.DEV[address][5] + "," + shared.DEV[address][6] + "," +\
+                                                         shared.DEV[address][7] + "," + shared.DEV[address][8])
+                        
                         
                         #self.dataStr = str(readData[0])
                 
@@ -132,8 +150,10 @@ class DataListenerServer(Thread):
                     print("DEV"+str(address)+" is Present!")  
                 else:
                     print("DEV"+str(address)+" is not Present!")
+                    #ireport.end()
             else:
                 print("DEV"+str(address)+" is not Present!")
+                #ireport.end()
 
 if __name__ == '__main__':
     logger.debug("demo")

@@ -2,7 +2,6 @@ import socket
 import sys
 from _thread import start_new_thread
 import threading
-lock2 = threading.Lock()
 
 import USBUtils
 import SerialPortUtil
@@ -13,24 +12,20 @@ from time import sleep, time
 
 import serial
 import appsettings
+from datalistenerserver import DataListenerServer
+from devinterface import  devInterface
+from testLcd import LCD
 
-'''
-_dataByteArray = []
-_dataBytesLiteral = b''
-_packet_being_received = False
-_begin_char = b'\x02'
-_end_char = b'\x04'
+import shared
 
-_flagcommand = False
-_msgwasreceived = False
 
-'''
-sleep(10)
-HOST = 'raspberrypi.local' # all availabe interfaces
+#sleep(10)
+HOST = 'raspberrypi.local' #'raspberrypi.local' # all availabe interfaces
 PORT = 65433 # arbitrary non privileged port
 
 try:
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    
 except socket.error as msg:
     print("Could not create socket. Error Code: ", str(msg[0]), "Error: ", msg[1])
     sys.exit(0)
@@ -47,12 +42,17 @@ except socket.error as msg:
 
 s.listen(10)
 print("Listening...")
-
+ds = DataListenerServer(None)
 # The code below is what you're looking for ############
+
+lcd = LCD()
+lcd.clear()
+#lcd.write_line1('Listenig...',1)
+#lcd.lcd_string('Local IP Address:',2)
+lcd.lcd_string('Listening...',1)
 
 def client_thread(conn):
     
-
     while True:
         p_data = conn.recv(1024)
         if not p_data:
@@ -60,6 +60,7 @@ def client_thread(conn):
         
         result = None
         data = None
+        
         try:
             #cmd_data = bytes(cmd,'ISO-8859-1')
             #p_data = devInterface.packMessage(address, op, cmd_data)
@@ -81,31 +82,74 @@ def client_thread(conn):
             op_code = 0x57
             op_file = 0x36
             cl_file = 0x37
+            op_data = 0x38
             t_out = 10
             
             if p_data[2] == op_file:
-                print("open")
-            elif p_data[2]==cl_file:
-                print("close")    
+                print("open report")
+                msg = devInterface.unpackMessage(p_data)
+                ds.start()
+                tmp = bytes("ACTION: PASS", 'ISO-8859-1')
+                data = bytes(devInterface.packMessage(msg[1], msg[2], tmp))
+                print("data:")
+                print(data)
 
-            if p_data[2] ==op_code:
-                t_out = 10
+            elif p_data[2]== cl_file:
+                print("close report")
+                msg = devInterface.unpackMessage(p_data)
+                tmp = bytes("ACTION: PASS", 'ISO-8859-1')
+                ds.stop()
+                data = bytes(devInterface.packMessage(msg[1], msg[2], tmp))
+                print("data:")
+                print(data)
+                
+            elif p_data[2] == op_data:
+                print("memory data")
+                msg = devInterface.unpackMessage(p_data)
+                #tmp = bytes("ACTION: PASS", 'ISO-8859-1')
+                
+                address = int(msg[1])
+                
+                tmp = "VALUE: " + "I" + shared.DEV[address][1] + "," +\
+                                  "V" + shared.DEV[address][2] + "," +\
+                                  "T" + shared.DEV[address][3] + "," +\
+                                  "P" + shared.DEV[address][4] + "," +\
+                                  "t" + shared.DEV[address][5] + "," +\
+                                  "Tt" + shared.DEV[address][6] + "," +\
+                                  "TT" + shared.DEV[address][7] + "," +\
+                                  "" + shared.DEV[address][8] 
+                print(tmp)
+                data = bytes(devInterface.packMessage(msg[1], msg[2], bytes(tmp,'ISO-8859-1')))
+                print("data3:")
+                print(data)
+
+
+                
             else:
-                t_out = 1
-            lock2.acquire()
-            try:
-                sct = SerialCommThread(None, sp, appsettings.FTDI_baudRate, p_data, b'\x04',t_out,5)
-                sct.start()
-                sct.join()
-            finally:
-                lock2.release()
+                
+                if p_data[2] == op_code:               #write eeprom json
+                    t_out = 10
+                else:
+                    t_out = 1
+                
+                try:    
+                    sct = SerialCommThread(None, sp, appsettings.FTDI_baudRate, p_data, b'\x04',t_out,5)
+                    sct.start()
+                    sct.join()
+                    
+                    data = bytes(serial_cmd_result[0])
+                    print(data)
+                    
+                except:
+                    print("Error: Serial Communication")
+                
+                
             #print("serial thread stopped")
             #if sct.stopped() == False:
             #    e="serial thread not stopped"
             #    print("\033[1;31;40m"+str(e)+"\033[0;37;40m")
 
-            data = serial_cmd_result[0]
-            print(data)
+  
             '''
             result = None
             if data != None:
@@ -116,90 +160,26 @@ def client_thread(conn):
         except Exception as e:
             print("\033[1;31;40m"+str(e)+"\033[0;37;40m")
         #return result
-        
-        '''
-        sp = None
-        if appsettings.useDongle == True:
-            print("Test Mac")
-            sp = SerialPortUtil.getFirstPortByVID_PID(0x1a86,0x7523)
-        else:
-            print("Test Raspbian")
-            sp = SerialPortUtil.getPortByName("/dev/ttyS0")
-        sp.baudrate = 115200
-        sp.timeout = 10
-        sp.flushInput()
-        sp.flushOutput()
 
-
-        if not sp.is_open:
-            sp.open()
-        
-        
-        sp.write(data)
-        #sleep(.002)
-
-        while sp.inWaiting()>0:
-            n = sp.inWaiting()
-            for _ in range(0, n):
-                reading = sp.read(1)
-                print("reading")
-                if len(reading) > 0:
-                    handle_data(reading)
-                    print("reading > 0")
-        
-        sp.close()
-        '''
         #reply = b'OK . . '
         #reply = serial_cmd_result[0]
         #print('Received', repr(data))
         if data != None:
-            conn.sendall(bytes(data))
+            conn.sendall(data)
         else:
             conn.sendall(b'None')
     print("[-] Closed connection")
     conn.close()
 
-'''
-def addcbuff(c):
-    if c == _end_char:
-        _dataByteArray.append(ord(c))
-        _dataBytesLiteral = ''.join(str( bytes(_dataByteArray), 'ISO-8859-1') )
-        _flag_command = True
-        process_data()
-        #print(c)
-        _packet_being_received = False
-        #print("END")
-    elif (c == _begin_char) and (len(_dataByteArray)<2):
-        #print("BEGIN")
-        _packet_being_received = True
-        _flagcommand = False
-        inicbuff()
-        _dataByteArray.append(ord(c))
-        _dataBytesLiteral = ''.join(str( bytes(_dataByteArray), 'ISO-8859-1') )
-        #print(c)
-    else:
-        if _packet_being_received == True:
-            _dataByteArray.append(ord(c))
-            _dataBytesLiteral = ''.join(str( bytes(_dataByteArray), 'ISO-8859-1') )
-            #print(c)
-
-def inicbuff():
-    #self._serialport.flushInput()
-    _dataByteArray.clear()
-    _dataBytesLiteral = b''
-
-def handle_data(c):
-    addcbuff(c)
-
-def process_data():
-    #print("process")
-    _msgwasreceived = True
-    serial_cmd_result[0] = _dataByteArray.copy()
-'''
 while True:
     # blocking call, waits to accept a connection
     conn, addr = s.accept()
     print("[-] Connected to " + addr[0] + ":" + str(addr[1]))
+    ip_address = ''
+    ip_address = s.getsockname()[0]
+    
+    lcd.write_line2(ip_address,1)
+    #print(ip_address)
 
     start_new_thread(client_thread, (conn,))
 

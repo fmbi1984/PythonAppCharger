@@ -13,17 +13,17 @@ LOW = 0
 HIGH = 1
 
 lock = threading.Lock() # lock will be used as a lock for the UART
-ljLock = threading.Lock() # lock will be used as a lock for the labjack
+#ljLock = threading.Lock() # lock will be used as a lock for the labjack
 
 devStart = 1
 devStop = 2
 
+#ping #I # V #T #P #t #Tt #TT #I
 DEV = [
     [False, '', '', '', '', '', '', '', ''],
     [False, '', '', '', '', '', '', '', ''],
     [False, '', '', '', '', '', '', '', '']
 ]
-
 
 
 def map(x, in_min, in_max, out_min, out_max):

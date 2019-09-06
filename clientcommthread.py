@@ -11,7 +11,7 @@ import StringUtils
 from communicate import Communicate
 from exitcodes import EXIT_CODE
 
-from shared import lock
+#from shared import lock
 import socket
 import serial
 import appsettings

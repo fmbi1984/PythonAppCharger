@@ -21,6 +21,8 @@ class devInterface(object):
 
     @staticmethod
     def packMessage(address, msg_op_type, msg_data):
+        print("msg_data:")
+        print(msg_data)
         packet_data = []
         packet_data.append(0x02)
         if address != None:
@@ -31,20 +33,41 @@ class devInterface(object):
         crc16 = xmodem_crc_func(bytes(msg_data[0:len(msg_data)]))
         crc16_high, crc16_low = crc16 >> 8, crc16 & 0x00FF
         packet_data.extend([0x03, crc16_low, crc16_high, 0x04])
+        print("packet_data:")
+        print(packet_data)
         return packet_data
 
     @staticmethod
     def unpackMessage(msg_data):
+        
+        print("msg_data_before[2]:")
+        print(msg_data[2])
+        
         packet_data = msg_data[2:len(msg_data)-4]
+        
+        print("packet_data len:")
+        print(len(packet_data))
+        print("packet_data[2]:")
+        print(packet_data[0])
         xmodem_crc_func = crcmod.mkCrcFun(0x11021, rev=False, initCrc=0x0000, xorOut=0x0000)
         crc16 = xmodem_crc_func(bytes(packet_data[0:len(packet_data)]))
         crc16_high, crc16_low = crc16 >> 8, crc16 & 0x00FF
         msg_crc_high, msg_crc_low = msg_data[len(msg_data)-2:len(msg_data)-1][0], msg_data[len(msg_data)-3:len(msg_data)-2][0]
-        is_valid = False
+        is_valid = True
         #is_valid = (msg_crc_high == crc16_high) and (msg_crc_low == crc16_low) and (msg_data[0] == 0x02) and (msg_data[len(msg_data)-1] == 0x04)
         msg_type = msg_data[1]
-        msg_data = packet_data
-        return [is_valid, msg_type, msg_data]
+        if len(packet_data) == 1:
+            msg_data2 = msg_data[2]#packet_data
+        else:
+            msg_data2 = packet_data
+        
+        #print("msg_data_after[2]:")
+        #print(msg_data2[0])
+        
+        print("msg_data_after:")
+        print(msg_data2)
+        
+        return [is_valid, msg_type, msg_data2]
 
     @staticmethod
     def sendCommandAndGetResponse(address, op, cmd, timeout):
