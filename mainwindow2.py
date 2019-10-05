@@ -8,7 +8,7 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 
-from datalistener import DataListener
+from datalistener import DataListenerServer
 #from datalistenerserver import DataListenerServer
 from devicemainboard import BCmb
 import shared
