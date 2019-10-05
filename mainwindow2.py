@@ -8,7 +8,7 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 
-from datalistener import DataListenerServer
+from datalistenermemory import DataListenerMemory
 #from datalistenerserver import DataListenerServer
 from devicemainboard import BCmb
 import shared
@@ -15581,7 +15581,7 @@ class Ui_MainWindow(object):
 
         print("Iniciar Actualizar")
         #self.dataThread = DataListener(self.testsCallback)
-        self.dataThread = DataListenerServer(self.testsCallback)
+        self.dataThread = DataListenerMemory(self.testsCallback)
         self.dataThread.start()
 
     def closeEvent(self, event):
@@ -15659,7 +15659,7 @@ class Ui_MainWindow(object):
 
 
     stateDisplay1 = 1
-    def on_cmdDisplay_clicked(self):
+    def on_cmdDisplay1_clicked(self):
         print("Display 1")
         self.stateDisplay1 = self.stateDisplay1 + 1
         if self.stateDisplay1==4 :
