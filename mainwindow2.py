@@ -8629,12 +8629,8 @@ class Ui_MainWindow(object):
         self.cmdDisplay8_28.setFlat(True)
         self.cmdDisplay8_28.setObjectName("cmdDisplay8_28")
         self.tabWidget.addTab(self.tbPage8, "")
-        self.cmdIniciarActualizar = QtWidgets.QPushButton(self.centralWidget)
-        self.cmdIniciarActualizar.setGeometry(QtCore.QRect(830, 0, 141, 32))
-        self.cmdIniciarActualizar.setObjectName("cmdIniciarActualizar")
-        self.cmdDetenerActualizar = QtWidgets.QPushButton(self.centralWidget)
-        self.cmdDetenerActualizar.setGeometry(QtCore.QRect(970, 0, 141, 32))
-        self.cmdDetenerActualizar.setObjectName("cmdDetenerActualizar")
+
+
         self.txtProgram = QtWidgets.QTextEdit(self.centralWidget)
         self.txtProgram.setGeometry(QtCore.QRect(120, 10, 231, 21))
         self.txtProgram.setObjectName("txtProgram")
@@ -8700,15 +8696,13 @@ class Ui_MainWindow(object):
         MainWindow.showEvent = self.showEvent
         MainWindow.closeEvent = self.closeEvent
 
-        
+
         self.cmdIniciar.clicked.connect(self.on_cmdIniciar_clicked)
 
         self.cmdPausar.clicked.connect(self.on_cmdPausar_clicked)
 
         self.cmdDetener.clicked.connect(self.on_cmdDetener_clicked)
 
-        self.cmdIniciarActualizar.clicked.connect(self.on_cmdIniciarActualizar_clicked)
-        self.cmdDetenerActualizar.clicked.connect(self.on_cmdDetenerActualizar_clicked)
 
         self.cmdSeleccionar.clicked.connect(self.on_cmdSeleccionar_clicked)
 
@@ -15490,8 +15484,7 @@ class Ui_MainWindow(object):
 "FirstN: 0"))
         self.cmdDisplay8_28.setText(_translate("MainWindow", "Voltage: 12.6V"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tbPage8), _translate("MainWindow", "Mesa 8"))
-        self.cmdIniciarActualizar.setText(_translate("MainWindow", "Iniciar Actualizar"))
-        self.cmdDetenerActualizar.setText(_translate("MainWindow", "Detener Actualizar"))
+
         self.cmdSeleccionar.setText(_translate("MainWindow", "Selecionar"))
         self.cmdIniciar.setText(_translate("MainWindow", "Iniciar"))
         self.cmdPausar.setText(_translate("MainWindow", "Pausar"))
@@ -15508,9 +15501,9 @@ class Ui_MainWindow(object):
         self.actionjjk.setText(_translate("MainWindow", "jjk"))
         self.actionjkjkj.setText(_translate("MainWindow", "jkjkj"))
 
-    
+
     def unitializeCheckbox(self):
-        for i in range(1,28):   
+        for i in range(1,28):
             myCheck = self.MainWindow.findChild(QtWidgets.QCheckBox, "chkSel1_"+str(i))
             myCheck.setVisible(False)
             myCheck.setCheckState(QtCore.Qt.Unchecked)
@@ -15586,48 +15579,55 @@ class Ui_MainWindow(object):
 
         self.fillWithSettings()
 
+        print("Iniciar Actualizar")
+        #self.dataThread = DataListener(self.testsCallback)
+        self.dataThread = DataListenerServer(self.testsCallback)
+        self.dataThread.start()
 
-    def on_cmdSeleccionar_clicked(self):  
-        self.initializeCheckbox()
-    
     def closeEvent(self, event):
         print("close")
+
+        print("Detener Actualizar")
+        self.dataThread.stop()
+
+    def on_cmdSeleccionar_clicked(self):
+        self.initializeCheckbox()
 
     def on_cmdIniciar_clicked(self):
         print("Iniciar")
 
-        for i in range(1,3): 
+        for i in range(1,3):
             myCheck = self.MainWindow.findChild(QtWidgets.QCheckBox, "chkSel1_"+str(i))
-            
+
             if myCheck.isChecked() == True:
                 BCmb.runClient('raspberrypi.local', i)
 
 
     def on_cmdPausar_clicked(self):
         print("Pausar")
-        
-        for i in range(1,3): 
+
+        for i in range(1,3):
             myCheck = self.MainWindow.findChild(QtWidgets.QCheckBox, "chkSel1_"+str(i))
-            
+
             if myCheck.isChecked() == True:
                 BCmb.pauseClient('raspberrypi.local', i)
-    
+
 
     def on_cmdDetener_clicked(self):
         print("Detener")
-        
-        for i in range(1,3): 
+
+        for i in range(1,3):
             myCheck = self.MainWindow.findChild(QtWidgets.QCheckBox, "chkSel1_"+str(i))
-            
+
             if myCheck.isChecked() == True:
                 BCmb.stopClient('raspberrypi.local', i)
-    
+
 
     WAIT_SECONDS = 1
 
     def display(self):
         print(time.ctime())
-        
+
         if shared.DEV[1][0] == True:
             newstr1 = ""
             if self.stateDisplay1 == 1:
@@ -15640,7 +15640,7 @@ class Ui_MainWindow(object):
                 #temperature
                 newstr1 = str(shared.DEV[1][3]) + " °C"
             self.cmdDisplay1_1.setText(str(newstr1))
-        
+
 
         if shared.DEV[2][0] == True:
             newstr2 = ""
@@ -15656,10 +15656,10 @@ class Ui_MainWindow(object):
             self.cmdDisplay1_2.setText(str(newstr2))
 
         threading.Timer(self.WAIT_SECONDS, self.display).start()
-          
+
 
     stateDisplay1 = 1
-    def on_cmdDisplay1_clicked(self):
+    def on_cmdDisplay_clicked(self):
         print("Display 1")
         self.stateDisplay1 = self.stateDisplay1 + 1
         if self.stateDisplay1==4 :
@@ -15679,7 +15679,7 @@ class Ui_MainWindow(object):
 
         for i in range(1,3):
         # address = 1
-            if "DL["+str(i)+"]" in msg:   
+            if "DL["+str(i)+"]" in msg:
                 msg = msg.replace("DL["+str(i)+"]:","")
 
                 myDisplay = self.MainWindow.findChild(QtWidgets.QPushButton, "cmdDisplay1_"+str(i))
@@ -15692,7 +15692,7 @@ class Ui_MainWindow(object):
                 self.cmdDisplay1_1.repaint()
                 self.cmdDisplay1_1.update()
                 self.cmdDisplay1_1.setUpdatesEnabled(True)
-                
+
                 #self.cmdDisplay2.setText(str(newstr2))
                 self.cmdDisplay1_2.repaint()
                 self.cmdDisplay1_2.update()
@@ -15710,19 +15710,8 @@ class Ui_MainWindow(object):
             self.cmdDisplay1.setUpdatesEnabled(True)
         '''
 
-    def on_cmdIniciarActualizar_clicked(self):
-        print("Iniciar Actualizar")
-        #self.dataThread = DataListener(self.testsCallback)
-        self.dataThread = DataListener(self.testsCallback)
-        self.dataThread.start()
-
-    def on_cmdDetenerActualizar_clicked(self):
-        print("Detener Actualizar")
-        self.dataThread.stop()
-
-
     def pingForDevicesPresent(self):
-        # we do ping to the devices 
+        # we do ping to the devices
         devStart = 1
         devStop = 2
         for i in range(devStart, devStop+1):
@@ -15735,7 +15724,7 @@ class Ui_MainWindow(object):
             if readData!= None:
                 if readData == True:
                     shared.DEV[i][0] = True
-                    print("DEV"+str(address)+" is Present!")  
+                    print("DEV"+str(address)+" is Present!")
                 else:
                     print("DEV"+str(address)+" is not Present!")
             else:
