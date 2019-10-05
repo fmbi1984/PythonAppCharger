@@ -241,6 +241,8 @@ class Ui_MainWindow(object):
 
         self.cmdGroup.clicked.connect(self.on_cmdGroup_clicked)
 
+        self.MainWindow = MainWindow
+
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "Pantalla de Formación"))
@@ -334,6 +336,8 @@ class Ui_MainWindow(object):
 
         self.unitializeCheckbox()
 
+        self.fillWithSettings()
+
 
     def on_cmdGroup_clicked(self):  
         self.initializeCheckbox()
@@ -344,14 +348,16 @@ class Ui_MainWindow(object):
     def on_cmdIniciar1_clicked(self):
         print("Iniciar")
         if self.check1.checkState == QtCore.Qt.Checked:
-            BCmb.runClient('raspberrypi.local', 1)
+            print("hola")
+            #BCmb.runClient('raspberrypi.local', 1)
         if self.check2.checkState == QtCore.Qt.Checked:
             BCmb.runClient('raspberrypi.local', 2)
     
     def on_cmdIniciar2_clicked(self):
         print("Iniciar")
         if self.check1.checkState == QtCore.Qt.Checked:
-            BCmb.runClient('raspberrypi.local', 1)
+            print("hola")
+            #BCmb.runClient('raspberrypi.local', 1)
         if self.check2.checkState == QtCore.Qt.Checked:
             BCmb.runClient('raspberrypi.local', 2)
     
@@ -485,6 +491,33 @@ class Ui_MainWindow(object):
                     print("DEV"+str(address)+" is not Present!")
             else:
                 print("DEV"+str(address)+" is not Present!")
+
+    def fillWithSettings(self):
+        for i in range(1, 9):
+
+            print(shared.DEV[0][8])
+
+            myName = self.MainWindow.findChild(QtWidgets.QLabel, "label")
+            myName.setText("Viri")
+
+            myName = self.MainWindow.findChild(QtWidgets.QLabel, "label_8")
+            myName.setText("Viri")
+
+            #myDisplay = self.MainWindow.findChild(QtWidgets.QPushButton, "cmdDisplay1")
+            #myDisplay.setText("Page 34")
+
+            myProgress = self.MainWindow.findChild(QtWidgets.QProgressBar, "pbProgram1")
+            #myProgress.setValue(10)
+
+            myTab = self.MainWindow.findChild(QtWidgets.QWidget, "tab_2")
+            self.tabWidget.setTabText(self.tabWidget.indexOf(myTab), "Mesa 2")
+
+            #self.set
+
+            print("Page "+str(i))
+        for i in range(0,28):
+            print("Name "+str(i))
+            
 
 
 if __name__ == "__main__":
